@@ -28,13 +28,12 @@
         .score-box { background: #e7f5ff; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #b3d7ff; }
         .score-title { font-size: 22px; font-weight: bold; color: #007bff; margin-bottom: 10px; }
 
-        /* 語句一覧のレイアウトを3列に調整 */
         .list-container { max-height: 400px; overflow-y: auto; text-align: left; border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: #fafafa; margin-top: 15px; }
         .list-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
         .list-item:last-child { border-bottom: none; }
         .list-word { font-weight: bold; color: #007bff; width: 40%; word-break: break-all; }
         .list-meaning { color: #555; width: 45%; word-break: break-all; padding-left: 10px; }
-        .list-check { width: 15%; text-align: center; font-size: 16px; } /* 3列目のチェックボックス枠 */
+        .list-check { width: 15%; text-align: center; font-size: 16px; }
         
         .search-bar { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
         .clear-btn { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; margin-top: 10px; }
@@ -1070,7 +1069,6 @@ const rawExcelData = `
     let currentIndex = 0;
     let correctAnswers = 0;
     
-    // ブラウザから過去に正解した単語リスト（配列）を読み込む。無ければ空っぽで始める。
     let solvedWords = JSON.parse(localStorage.getItem('solvedWords')) || [];
 
     function parseData() {
@@ -1090,10 +1088,14 @@ const rawExcelData = `
         document.getElementById(screenId).classList.add('active');
     }
 
+    // 💡 修正箇所：元の配列を壊さないようにコピーを作ってからシャッフルします
     function startQuizMode() {
         switchScreen('quiz-screen');
-        allQuizList.sort(() => Math.random() - 0.5);
-        currentSet = allQuizList.slice(0, 20);
+        
+        // [...allQuizList] でExcelの順番とは別のコピーを作成
+        let scrambledList = [...allQuizList].sort(() => Math.random() - 0.5);
+        currentSet = scrambledList.slice(0, 20);
+        
         currentIndex = 0;
         correctAnswers = 0;
         loadQuiz();
@@ -1141,7 +1143,6 @@ const rawExcelData = `
                     correctAnswers++;
                     document.getElementById('current-score').innerText = correctAnswers;
                     
-                    // 💡 正解した単語を記憶に保存する処理
                     saveProgress(currentQuiz.word);
                 } else {
                     document.getElementById('result').innerText = "❌ 不正解...";
@@ -1154,11 +1155,9 @@ const rawExcelData = `
         });
     }
 
-    // 正解した単語をブラウザに覚えさせる関数
     function saveProgress(word) {
         if (!solvedWords.includes(word)) {
             solvedWords.push(word);
-            // ローカルストレージに保存（文字データに変換して保存します）
             localStorage.setItem('solvedWords', JSON.stringify(solvedWords));
         }
     }
@@ -1173,7 +1172,6 @@ const rawExcelData = `
             let rate = Math.round((correctAnswers / 20) * 100);
             document.getElementById('accuracy-rate').innerText = rate;
             
-            // クイズセットが終わったタイミングで、語句一覧のチェックマークを最新に更新しておく
             generateWordsList();
         }
     }
@@ -1181,17 +1179,15 @@ const rawExcelData = `
     function startListMode() {
         switchScreen('list-screen');
         document.getElementById('search-input').value = "";
-        generateWordsList(); // 開くたびに最新のチェック状態にする
+        generateWordsList(); 
         filterList();
     }
 
-    // 💡 語句一覧を3列（単語・意味・チェックマーク）で表示する
     function generateWordsList() {
         const listContainer = document.getElementById('words-list');
         listContainer.innerHTML = "";
         
         allQuizList.forEach(item => {
-            // 過去に正解したことがある単語なら「✅」、なければ空欄
             const checkMark = solvedWords.includes(item.word) ? "✅" : "";
             
             const div = document.createElement('div');
@@ -1221,7 +1217,6 @@ const rawExcelData = `
         });
     }
 
-    // 💡 おまけ：記憶を全消去して最初からやり直したい時のリセットボタン用
     function resetCheckedHistory() {
         if (confirm("これまでの正解記録をすべて消去してリセットしますか？")) {
             localStorage.removeItem('solvedWords');
