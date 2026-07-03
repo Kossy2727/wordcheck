@@ -31,11 +31,12 @@
         <button id="next-btn" onclick="nextQuestion()">次の問題へ</button>
     </div>
 
-    <!-- 20問終わったときのスコア画面 -->
+   <!-- 20問終わったときのスコア画面 -->
     <div id="score-screen" style="display: none;">
         <div class="score-box" id="final-score-box">
             <div class="score-title">結果発表 🎉</div>
             <div style="font-size: 24px; font-weight: bold;">20問中 <span id="correct-count">0</span> 問正解！</div>
+            <div style="font-size: 20px; font-weight: bold; color: #ff922b; margin-top: 10px;">正解率: <span id="accuracy-rate">0</span>%</div>
         </div>
         <button class="btn" style="text-align: center; background: #007bff; color: white;" onclick="startNewSet()">次の20問を解く！</button>
     </div>
@@ -1130,11 +1131,14 @@ const rawExcelData = `
         if (currentIndex < 20) {
             // まだ20問未満なら次の問題へ
             loadQuiz();
+        JavaScript
         } else {
             // 20問解き終わったら結果画面を表示
             document.getElementById('quiz-screen').style.display = "none";
             document.getElementById('score-screen').style.display = "block";
             document.getElementById('correct-count').innerText = correctAnswers;
+            let rate = Math.round((correctAnswers / 20) * 100);
+            document.getElementById('accuracy-rate').innerText = rate;
         }
     }
 
