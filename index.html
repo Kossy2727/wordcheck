@@ -1189,10 +1189,8 @@ const rawExcelData = `
         const listContainer = document.getElementById('words-list');
         listContainer.innerHTML = "";
         
-        // 辞書順（単語のアルファベット順・五十音順）に並び替える
-        const sortedList = [...allQuizList].sort((a, b) => a.word.localeCompare(b.word, 'ja'));
-
-        sortedList.forEach(item => {
+        // ★並び替えをせず、Excelの順番（allQuizList）のまま表示します
+        allQuizList.forEach(item => {
             const div = document.createElement('div');
             div.className = 'list-item';
             div.innerHTML = `<span class="list-word">${item.word}</span><span class="list-meaning">${item.meaning}</span>`;
