@@ -20,7 +20,13 @@
 
         .title { font-size: 26px; font-weight: bold; margin-bottom: 25px; color: #333; }
         
-        .hud { display: flex; justify-content: space-between; color: #666; font-size: 14px; margin-bottom: 15px; }
+        /* クイズ画面の上のレイアウト調整 */
+        .hud { display: flex; justify-content: space-between; align-items: center; color: #666; font-size: 14px; margin-bottom: 15px; }
+        .hud-stats { text-align: left; }
+        /* ✖ 中断ボタンの見た目 */
+        .quit-btn { background: #e0e0e0; color: #555; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        .quit-btn:hover { background: #d0d0d0; }
+
         .word { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #007bff; }
         #result { font-size: 20px; font-weight: bold; margin: 15px 0; height: 25px; }
         #next-btn { display: none; margin: 0 auto; }
@@ -49,10 +55,15 @@
         <button class="btn btn-outline" onclick="startListMode()">📖 語句一覧を見る (<span id="total-words-count">0</span>語)</button>
     </div>
 
+    <!-- クイズ画面 -->
     <div id="quiz-screen" class="screen">
         <div class="hud">
-            <div>問題: <span id="progress">0 / 20</span></div>
-            <div>正解数: <span id="current-score">0</span></div>
+            <div class="hud-stats">
+                <div>問題: <span id="progress">0 / 20</span></div>
+                <div>正解数: <span id="current-score">0</span></div>
+            </div>
+            <!-- 💡 ここに新しく「✖ 中断」ボタンを追加しました -->
+            <button class="quit-btn" onclick="quitQuiz()">✖ 中断</button>
         </div>
         <div class="word" id="question-word">読み込み中...</div>
         <div id="options-box"></div>
@@ -1088,14 +1099,10 @@ const rawExcelData = `
         document.getElementById(screenId).classList.add('active');
     }
 
-    // 💡 修正箇所：元の配列を壊さないようにコピーを作ってからシャッフルします
     function startQuizMode() {
         switchScreen('quiz-screen');
-        
-        // [...allQuizList] でExcelの順番とは別のコピーを作成
         let scrambledList = [...allQuizList].sort(() => Math.random() - 0.5);
         currentSet = scrambledList.slice(0, 20);
-        
         currentIndex = 0;
         correctAnswers = 0;
         loadQuiz();
@@ -1173,6 +1180,13 @@ const rawExcelData = `
             document.getElementById('accuracy-rate').innerText = rate;
             
             generateWordsList();
+        }
+    }
+
+    // 💡 修正箇所：「✖ 中断」ボタンを押したときの処理
+    function quitQuiz() {
+        if (confirm("クイズを途中でやめてホームに戻りますか？\n（この回の途中経過は保存されません）")) {
+            goHome();
         }
     }
 
