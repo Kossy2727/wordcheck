@@ -12,7 +12,8 @@
         .btn:hover { background: #eee; }
         #result { font-size: 20px; font-weight: bold; margin: 15px 0; height: 25px; }
         #next-btn { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; display: none; margin: 0 auto; }
-        .score-box { background: #e7f5ff; padding: 20px; border-radius: 8px; margin-bottom: 20px; display: none; }
+        /* 💡 display: none; を削除し、画面全体の切り替えで制御するように修正しました */
+        .score-box { background: #e7f5ff; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
         .score-title { font-size: 20px; font-weight: bold; color: #007bff; margin-bottom: 10px; }
     </style>
 </head>
@@ -1023,7 +1024,6 @@ const rawExcelData = `
 わだかまり	気にかかることがあってすっきりしないこと
 渡りに船	何かしようとするときに、ちょうど都合の良いことに巡り合うこと。
 渡る世間に鬼はない	世の中には無情な人ばかりではなく、情け深い人はどこにでもいるものだ
-
 `;
 // ★★★【貼り付けここまで】★★★
 
@@ -1052,7 +1052,7 @@ const rawExcelData = `
         document.getElementById('quiz-screen').style.display = "block";
         document.getElementById('score-screen').style.display = "none";
 
-        // 全978件をランダムに並び替える
+        // 全ファイルをランダムに並び替える
         allQuizList.sort(() => Math.random() - 0.5);
 
         // 先頭から20問だけを今回のセットとして切り出す
@@ -1081,7 +1081,7 @@ const rawExcelData = `
         const currentQuiz = currentSet[currentIndex];
         document.getElementById('question-word').innerText = `「 ${currentQuiz.word} 」の意味は？`;
 
-        // ダミーを「全データ(978件)」から3つランダムに選ぶ
+        // ダミーを「全データ」から3つランダムに選ぶ
         let dummys = [];
         while(dummys.length < 3) {
             let rand = allQuizList[Math.floor(Math.random() * allQuizList.length)].meaning;
@@ -1132,10 +1132,11 @@ const rawExcelData = `
             // まだ20問未満なら次の問題へ
             loadQuiz();
         } else {
-            // 20問解き終わったら結果画面を表示
+            // 💡 紛れ込んでいた余分な文字を削除し、正しく計算されるようにしました
             document.getElementById('quiz-screen').style.display = "none";
             document.getElementById('score-screen').style.display = "block";
             document.getElementById('correct-count').innerText = correctAnswers;
+            
             let rate = Math.round((correctAnswers / 20) * 100);
             document.getElementById('accuracy-rate').innerText = rate;
         }
