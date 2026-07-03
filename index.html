@@ -8,7 +8,6 @@
         body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
         .box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; box-sizing: border-box; }
         
-        /* 共通ボタン */
         .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; background: #fff; cursor: pointer; text-align: left; font-size: 16px; box-sizing: border-box; transition: background 0.2s; }
         .btn:hover { background: #f0f0f0; }
         .btn-primary { background: #007bff; color: white; border: none; text-align: center; font-weight: bold; }
@@ -16,44 +15,41 @@
         .btn-outline { background: #fff; color: #333; border: 2px solid #007bff; text-align: center; font-weight: bold; }
         .btn-outline:hover { background: #ebf5ff; }
 
-        /* 各画面のコントロール */
         .screen { display: none; }
         .screen.active { display: block; }
 
-        /* ホーム画面 */
         .title { font-size: 26px; font-weight: bold; margin-bottom: 25px; color: #333; }
         
-        /* クイズ画面 */
         .hud { display: flex; justify-content: space-between; color: #666; font-size: 14px; margin-bottom: 15px; }
         .word { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #007bff; }
         #result { font-size: 20px; font-weight: bold; margin: 15px 0; height: 25px; }
         #next-btn { display: none; margin: 0 auto; }
 
-        /* スコア画面 */
         .score-box { background: #e7f5ff; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #b3d7ff; }
         .score-title { font-size: 22px; font-weight: bold; color: #007bff; margin-bottom: 10px; }
 
-        /* 語句一覧画面 */
+        /* 語句一覧のレイアウトを3列に調整 */
         .list-container { max-height: 400px; overflow-y: auto; text-align: left; border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: #fafafa; margin-top: 15px; }
-        .list-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 15px; }
+        .list-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
         .list-item:last-child { border-bottom: none; }
-        .list-word { font-weight: bold; color: #007bff; width: 45%; word-break: break-all; }
-        .list-meaning { color: #555; width: 55%; word-break: break-all; padding-left: 10px; }
+        .list-word { font-weight: bold; color: #007bff; width: 40%; word-break: break-all; }
+        .list-meaning { color: #555; width: 45%; word-break: break-all; padding-left: 10px; }
+        .list-check { width: 15%; text-align: center; font-size: 16px; } /* 3列目のチェックボックス枠 */
+        
         .search-bar { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
+        .clear-btn { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="box">
     
-    <!-- 1. ホーム画面 -->
     <div id="home-screen" class="screen active">
         <div class="title">単語マスター 📚</div>
         <button class="btn btn-primary" onclick="startQuizMode()">🔥 20問クイズに挑戦</button>
         <button class="btn btn-outline" onclick="startListMode()">📖 語句一覧を見る (<span id="total-words-count">0</span>語)</button>
     </div>
 
-    <!-- 2. クイズ画面 -->
     <div id="quiz-screen" class="screen">
         <div class="hud">
             <div>問題: <span id="progress">0 / 20</span></div>
@@ -65,7 +61,6 @@
         <button id="next-btn" class="btn btn-primary" onclick="nextQuestion()">次の問題へ</button>
     </div>
 
-    <!-- 3. 結果発表画面 -->
     <div id="score-screen" class="screen">
         <div class="score-box">
             <div class="score-title">結果発表 🎉</div>
@@ -76,20 +71,18 @@
         <button class="btn btn-outline" onclick="goHome()">🏠 ホームに戻る</button>
     </div>
 
-    <!-- 4. 語句一覧画面 -->
     <div id="list-screen" class="screen">
         <div class="title" style="font-size:20px; margin-bottom:15px;">語句一覧 📖</div>
         <input type="text" id="search-input" class="search-bar" placeholder="単語や意味で検索..." oninput="filterList()">
-        <div class="list-container" id="words-list">
-            <!-- ここに978個のデータが自動で入ります -->
-        </div>
-        <button class="btn btn-outline" style="margin-top:15px;" onclick="goHome()">🏠 ホームに戻る</button>
+        <div class="list-container" id="words-list"></div>
+        <button class="btn btn-outline" style="margin-top:15px; margin-bottom: 0;" onclick="goHome()">🏠 ホームに戻る</button>
+        <button class="clear-btn" onclick="resetCheckedHistory()">クリア履歴をリセットする</button>
     </div>
 
 </div>
 
 <script>
-// ★★★【ここに今まで通りExcelのデータを貼り付けてください】★★★
+// ★★★【ここにExcelのデータを貼り付けます】★★★
 const rawExcelData = `
 愛嬌	にこにこして可愛らしいこと。相手を喜ばせるための言葉や行い。
 愛護	可愛がって、大切にすること。良さを守って、保護すること。
@@ -1072,12 +1065,14 @@ const rawExcelData = `
 `;
 // ★★★【貼り付けここまで】★★★
 
-    let allQuizList = [];    // 978件すべてのデータ
-    let currentSet = [];     // 今回の20問
-    let currentIndex = 0;    // 何問目か
-    let correctAnswers = 0;  // 正解数
+    let allQuizList = [];
+    let currentSet = [];
+    let currentIndex = 0;
+    let correctAnswers = 0;
+    
+    // ブラウザから過去に正解した単語リスト（配列）を読み込む。無ければ空っぽで始める。
+    let solvedWords = JSON.parse(localStorage.getItem('solvedWords')) || [];
 
-    // 1. データ読み込みと初期化
     function parseData() {
         const lines = rawExcelData.trim().split('\n');
         lines.forEach(line => {
@@ -1086,19 +1081,15 @@ const rawExcelData = `
                 allQuizList.push({ word: parts[0].trim(), meaning: parts[1].trim() });
             }
         });
-        // ホーム画面の総語数表示を更新
         document.getElementById('total-words-count').innerText = allQuizList.length;
-        // 語句一覧画面を裏で作っておく
         generateWordsList();
     }
 
-    // 画面切り替えの共通命令
     function switchScreen(screenId) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
     }
 
-    // 2. クイズモード開始
     function startQuizMode() {
         switchScreen('quiz-screen');
         allQuizList.sort(() => Math.random() - 0.5);
@@ -1108,7 +1099,6 @@ const rawExcelData = `
         loadQuiz();
     }
 
-    // クイズの1問表示
     function loadQuiz() {
         document.getElementById('result').innerText = "";
         document.getElementById('next-btn').style.display = "none";
@@ -1121,7 +1111,6 @@ const rawExcelData = `
         const currentQuiz = currentSet[currentIndex];
         document.getElementById('question-word').innerText = `「 ${currentQuiz.word} 」`;
 
-        // ダミーを全体から3つ選ぶ
         let dummys = [];
         while(dummys.length < 3) {
             let rand = allQuizList[Math.floor(Math.random() * allQuizList.length)].meaning;
@@ -1130,7 +1119,6 @@ const rawExcelData = `
             }
         }
 
-        // 4択シャッフル
         let choices = [
             {text: currentQuiz.meaning, isCorrect: true}, 
             {text: dummys[0], isCorrect: false}, 
@@ -1139,7 +1127,6 @@ const rawExcelData = `
         ];
         choices.sort(() => Math.random() - 0.5);
 
-        // ボタン作成
         choices.forEach(choice => {
             const btn = document.createElement('button');
             btn.className = 'btn';
@@ -1153,6 +1140,9 @@ const rawExcelData = `
                     btn.style.background = "#d4edda";
                     correctAnswers++;
                     document.getElementById('current-score').innerText = correctAnswers;
+                    
+                    // 💡 正解した単語を記憶に保存する処理
+                    saveProgress(currentQuiz.word);
                 } else {
                     document.getElementById('result').innerText = "❌ 不正解...";
                     btn.style.background = "#f8d7da";
@@ -1164,41 +1154,57 @@ const rawExcelData = `
         });
     }
 
+    // 正解した単語をブラウザに覚えさせる関数
+    function saveProgress(word) {
+        if (!solvedWords.includes(word)) {
+            solvedWords.push(word);
+            // ローカルストレージに保存（文字データに変換して保存します）
+            localStorage.setItem('solvedWords', JSON.stringify(solvedWords));
+        }
+    }
+
     function nextQuestion() {
         currentIndex++;
         if (currentIndex < 20) {
             loadQuiz();
         } else {
-            // 結果画面を表示
             switchScreen('score-screen');
             document.getElementById('correct-count').innerText = correctAnswers;
             let rate = Math.round((correctAnswers / 20) * 100);
             document.getElementById('accuracy-rate').innerText = rate;
+            
+            // クイズセットが終わったタイミングで、語句一覧のチェックマークを最新に更新しておく
+            generateWordsList();
         }
     }
 
-    // 3. 語句一覧モード開始
     function startListMode() {
         switchScreen('list-screen');
-        document.getElementById('search-input').value = ""; // 検索窓リセット
-        filterList(); // 一覧表示
+        document.getElementById('search-input').value = "";
+        generateWordsList(); // 開くたびに最新のチェック状態にする
+        filterList();
     }
 
-    // 一覧のHTML要素を全自動生成する
+    // 💡 語句一覧を3列（単語・意味・チェックマーク）で表示する
     function generateWordsList() {
         const listContainer = document.getElementById('words-list');
         listContainer.innerHTML = "";
         
-        // ★並び替えをせず、Excelの順番（allQuizList）のまま表示します
         allQuizList.forEach(item => {
+            // 過去に正解したことがある単語なら「✅」、なければ空欄
+            const checkMark = solvedWords.includes(item.word) ? "✅" : "";
+            
             const div = document.createElement('div');
             div.className = 'list-item';
-            div.innerHTML = `<span class="list-word">${item.word}</span><span class="list-meaning">${item.meaning}</span>`;
+            div.innerHTML = `
+                <span class="list-word">${item.word}</span>
+                <span class="list-meaning">${item.meaning}</span>
+                <span class="list-check">${checkMark}</span>
+            `;
             listContainer.appendChild(div);
         });
     }
 
-    // 検索フィルター機能
     function filterList() {
         const query = document.getElementById('search-input').value.toLowerCase();
         const items = document.querySelectorAll('.list-item');
@@ -1215,12 +1221,20 @@ const rawExcelData = `
         });
     }
 
-    // 4. ホームに戻る
+    // 💡 おまけ：記憶を全消去して最初からやり直したい時のリセットボタン用
+    function resetCheckedHistory() {
+        if (confirm("これまでの正解記録をすべて消去してリセットしますか？")) {
+            localStorage.removeItem('solvedWords');
+            solvedWords = [];
+            generateWordsList();
+            alert("リセットしました！");
+        }
+    }
+
     function goHome() {
         switchScreen('home-screen');
     }
 
-    // 起動
     parseData();
 </script>
 </body>
