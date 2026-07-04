@@ -20,7 +20,11 @@
 
         .title { font-size: 26px; font-weight: bold; margin-bottom: 25px; color: #333; }
         
-        .hud { display: flex; justify-content: space-between; color: #666; font-size: 14px; margin-bottom: 15px; }
+        /* 1️⃣ 【追加】中断ボタンとHUDを横並びにするスタイル */
+        .hud { display: flex; justify-content: space-between; align-items: center; color: #666; font-size: 14px; margin-bottom: 15px; }
+        .quit-btn { background: #e0e0e0; color: #555; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .quit-btn:hover { background: #d0d0d0; }
+
         .word { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #007bff; }
         #result { font-size: 20px; font-weight: bold; margin: 15px 0; height: 25px; }
         #next-btn { display: none; margin: 0 auto; }
@@ -51,8 +55,12 @@
 
     <div id="quiz-screen" class="screen">
         <div class="hud">
-            <div>問題: <span id="progress">0 / 20</span></div>
-            <div>正解数: <span id="current-score">0</span></div>
+            <div>
+                <div>問題: <span id="progress">0 / 20</span></div>
+                <div>正解数: <span id="current-score">0</span></div>
+            </div>
+            <!-- 2️⃣ 【追加】クイズ画面に「✖ 中断」ボタンを配置 -->
+            <button class="quit-btn" onclick="quitQuiz()">✖ 中断</button>
         </div>
         <div class="word" id="question-word">読み込み中...</div>
         <div id="options-box"></div>
@@ -1088,11 +1096,9 @@ const rawExcelData = `
         document.getElementById(screenId).classList.add('active');
     }
 
-    // 💡 修正箇所：元の配列を壊さないようにコピーを作ってからシャッフルします
     function startQuizMode() {
         switchScreen('quiz-screen');
         
-        // [...allQuizList] でExcelの順番とは別のコピーを作成
         let scrambledList = [...allQuizList].sort(() => Math.random() - 0.5);
         currentSet = scrambledList.slice(0, 20);
         
@@ -1173,6 +1179,13 @@ const rawExcelData = `
             document.getElementById('accuracy-rate').innerText = rate;
             
             generateWordsList();
+        }
+    }
+
+    // 3️⃣ 【追加】中断ボタンをクリックした時の処理（正解履歴の追加更新はしません）
+    function quitQuiz() {
+        if (confirm("クイズを途中でやめてホームに戻りますか？")) {
+            goHome();
         }
     }
 
