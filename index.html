@@ -24,7 +24,6 @@
         .quit-btn { background: #e0e0e0; color: #555; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
         .quit-btn:hover { background: #d0d0d0; }
 
-        /* 💡 クイズ画面のフリガナ（ルビ）の隙間をきれいに調整 */
         .word { font-size: 24px; font-weight: bold; margin-bottom: 25px; color: #007bff; line-height: 1.8; }
         rt { font-size: 13px; color: #666; font-weight: normal; }
 
@@ -34,11 +33,10 @@
         .score-box { background: #e7f5ff; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #b3d7ff; }
         .score-title { font-size: 22px; font-weight: bold; color: #007bff; margin-bottom: 10px; }
 
-        .list-container { max-height: 400px; overflow-y: auto; text-align: left; border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: #fafafa; margin-top: 15px; }
+        .list-container { max-height: 380px; overflow-y: auto; text-align: left; border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: #fafafa; margin-top: 12px; }
         .list-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
         .list-item:last-child { border-bottom: none; }
         
-        /* 💡 語句一覧でのフリガナの表示スタイル */
         .list-word { color: #007bff; width: 45%; word-break: break-all; line-height: 1.4; }
         .list-word-main { font-weight: bold; font-size: 15px; }
         .list-word-yomi { display: block; font-size: 11px; color: #777; font-weight: normal; margin-top: 2px; }
@@ -48,6 +46,13 @@
         
         .search-bar { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
         .clear-btn { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; margin-top: 10px; }
+
+        /* 📊 【追加】達成率メーターのスタイル */
+        .progress-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 12px; margin-bottom: 12px; text-align: left; }
+        .progress-text-container { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; font-size: 14px; color: #495057; }
+        .progress-percent { font-size: 20px; font-weight: bold; color: #28a745; }
+        .progress-bar-bg { background: #e9ecef; height: 8px; border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { background: #28a745; height: 100%; width: 0%; transition: width 0.5s ease; }
     </style>
 </head>
 <body>
@@ -68,7 +73,6 @@
             </div>
             <button class="quit-btn" onclick="quitQuiz()">✖ 中断</button>
         </div>
-        <!-- 💡 ここにフリガナ付きの単語が挿入されます -->
         <div class="word" id="question-word">読み込み中...</div>
         <div id="options-box"></div>
         <div id="result"></div>
@@ -87,6 +91,18 @@
 
     <div id="list-screen" class="screen">
         <div class="title" style="font-size:20px; margin-bottom:15px;">語句一覧 📖</div>
+        
+        <!-- 📊 【追加】検索ボックスの上に達成率を表示するエリア -->
+        <div class="progress-box">
+            <div class="progress-text-container">
+                <div>現在の達成率: <span id="solved-count-text">0</span> / <span id="total-count-text">0</span> 語</div>
+                <div><span id="progress-percent-text" class="progress-percent">0</span>%</div>
+            </div>
+            <div class="progress-bar-bg">
+                <div id="progress-bar-fill" class="progress-bar-fill"></div>
+            </div>
+        </div>
+
         <input type="text" id="search-input" class="search-bar" placeholder="単語・よみ・意味で検索..." oninput="filterList()">
         <div class="list-container" id="words-list"></div>
         <button class="btn btn-outline" style="margin-top:15px; margin-bottom: 0;" onclick="goHome()">🏠 ホームに戻る</button>
@@ -97,7 +113,6 @@
 
 <script>
 // ★★★【ここにExcelのデータを丸ごと貼り付けます】★★★
-// 💡 A列（語句）[Tab] B列（読み方）[Tab] C列（意味）の順で貼り付けてください
 const rawExcelData = `
 愛嬌	あいきょう	にこにこして可愛らしいこと。相手を喜ばせるための言葉や行い。
 愛護	あいご	可愛がって、大切にすること。良さを守って、保護すること。
@@ -1087,7 +1102,6 @@ const rawExcelData = `
     
     let solvedWords = JSON.parse(localStorage.getItem('solvedWords')) || [];
 
-    // 💡 3列データ（語句・読み方・意味）に対応するように修正
     function parseData() {
         const lines = rawExcelData.trim().split('\n');
         lines.forEach(line => {
@@ -1130,8 +1144,6 @@ const rawExcelData = `
         optionsBox.innerHTML = "";
 
         const currentQuiz = currentSet[currentIndex];
-        
-        // 💡 クイズ画面：HTMLの<ruby>タグを使って漢字の上に綺麗にフリガナを表示
         document.getElementById('question-word').innerHTML = `<ruby>${currentQuiz.word}<rt>${currentQuiz.yomi}</rt></ruby>`;
 
         let dummys = [];
@@ -1210,13 +1222,19 @@ const rawExcelData = `
         filterList();
     }
 
-    // 💡 語句一覧：単語の下に小さく「よみ」を表示するように変更
+    // 💡 変更箇所：リスト生成のタイミングで達成率（個数・パーセンテージ・緑のゲージ）を計算して更新
     function generateWordsList() {
         const listContainer = document.getElementById('words-list');
         listContainer.innerHTML = "";
         
+        let currentSolvedCount = 0; // 今回カウントする用
+
         allQuizList.forEach(item => {
-            const checkMark = solvedWords.includes(item.word) ? "✅" : "";
+            const hasSolved = solvedWords.includes(item.word);
+            if (hasSolved) {
+                currentSolvedCount++;
+            }
+            const checkMark = hasSolved ? "✅" : "";
             
             const div = document.createElement('div');
             div.className = 'list-item';
@@ -1230,9 +1248,17 @@ const rawExcelData = `
             `;
             listContainer.appendChild(div);
         });
+
+        // 📊 達成率のテキストと緑色のプログレスバーを更新
+        const totalCount = allQuizList.length;
+        document.getElementById('total-count-text').innerText = totalCount;
+        document.getElementById('solved-count-text').innerText = currentSolvedCount;
+        
+        let percent = totalCount > 0 ? Math.round((currentSolvedCount / totalCount) * 100) : 0;
+        document.getElementById('progress-percent-text').innerText = percent;
+        document.getElementById('progress-bar-fill').style.width = `${percent}%`;
     }
 
-    // 💡 検索機能：フリガナ（よみ）でも部分一致で引っかかるようにパワーアップ
     function filterList() {
         const query = document.getElementById('search-input').value.toLowerCase();
         const items = document.querySelectorAll('.list-item');
