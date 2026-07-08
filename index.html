@@ -53,29 +53,48 @@
         .progress-bar-bg { background: #e9ecef; height: 8px; border-radius: 4px; overflow: hidden; }
         .progress-bar-fill { background: #28a745; height: 100%; width: 0%; transition: width 0.5s ease; }
 
-        /* 🥇 スタンプカードのスタイル変更（2段構成） */
+        /* 🥇 スタンプカードのスタイル */
         .medal-box { background: #fff9db; border: 2px dashed #fcc419; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
         .medal-title { font-size: 13px; font-weight: bold; color: #e67e22; margin-bottom: 6px; text-align: left; }
-        .medal-slots { display: flex; justify-content: flex-start; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; min-height: 34px; }
+        .medal-slots { display: flex; justify-content: flex-start; flex-wrap: wrap; gap: 6px; margin-bottom: 5px; min-height: 34px; }
         .medal-slot { width: 30px; height: 30px; background: #fff; border: 1px solid #ffe3e3; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 16px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
-        .medal-reset-btn { background: #f08c00; color: white; border: none; padding: 5px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; display: none; margin: 5px auto 0 auto; }
-        .medal-reset-btn:hover { background: #e67e22; }
 
-        /* 📅 ① カレンダー・ログイン日数のスタイル */
+        /* 📅 カレンダー・ログイン日数のスタイル */
         .status-bar { background: #e8f7ff; border: 1px solid #bde0fe; border-radius: 8px; padding: 10px; margin-bottom: 15px; font-size: 13px; color: #0056b3; font-weight: bold; text-align: left; display: flex; justify-content: space-between; }
         .streak-fire { color: #ff6b6b; font-size: 15px; }
 
-        /* 📋 ② デイリーミッション枠のスタイル */
-        .mission-box { background: #f3f0ff; border: 2px solid #d0bfff; border-radius: 10px; padding: 12px; margin-bottom: 20px; text-align: left; }
+        /* 📋 デイリーミッション枠のスタイル */
+        .mission-box { background: #f3f0ff; border: 2px solid #d0bfff; border-radius: 10px; padding: 12px; margin-bottom: 15px; text-align: left; }
         .mission-title { font-size: 14px; font-weight: bold; color: #6f42c1; margin-bottom: 4px; display: flex; justify-content: space-between; }
         .mission-detail { font-size: 15px; font-weight: bold; color: #333; }
         .mission-status-badge { background: #6f42c1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
         .mission-status-complete { background: #28a745; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
 
-        /* 🎡 ② ルーレットポップアップのスタイル */
+        /* 🎡 ルーレットポップアップのスタイル */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .roulette-window { background: white; padding: 25px; border-radius: 16px; width: 90%; max-width: 360px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         .roulette-display { font-size: 48px; font-weight: bold; color: #6f42c1; background: #f3f0ff; border: 4px dashed #9775fa; border-radius: 12px; padding: 20px; margin: 20px 0; min-height: 70px; display: flex; justify-content: center; align-items: center; }
+
+        /* 🎟️ 【追加】特典チケット関連のスタイル */
+        .btn-ticket { background: #ff6b6b; color: white; border: none; text-align: center; font-weight: bold; animation: pulse 2s infinite; }
+        .btn-ticket:hover { background: #fa5252; }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,107,107,0.7); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(255,107,107,0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,107,107,0); }
+        }
+        .ticket-item { background: #fff5f5; border: 2px dashed #ffc9c9; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s; }
+        .ticket-item:hover { background: #ffe3e3; }
+        .ticket-info { text-align: left; }
+        .ticket-name { font-size: 16px; font-weight: bold; color: #c92a2a; }
+        .ticket-date { font-size: 11px; color: #868e96; margin-top: 4px; }
+        .ticket-arrow { color: #ff6b6b; font-size: 18px; font-weight: bold; }
+        
+        /* 全画面チケット表示用のスタイル */
+        .fullscreen-ticket-window { background: #fff5f5; border: 4px dashed #ffc9c9; padding: 40px 20px; border-radius: 20px; width: 85%; max-width: 340px; text-align: center; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
+        .fullscreen-ticket-title { font-size: 24px; font-weight: bold; color: #c92a2a; margin-bottom: 10px; letter-spacing: 1px; }
+        .fullscreen-ticket-sub { font-size: 13px; color: #fa5252; margin-bottom: 30px; font-weight: bold; }
+        .fullscreen-ticket-notice { font-size: 12px; color: #868e96; background: white; border-radius: 8px; padding: 15px; line-height: 1.6; margin-bottom: 35px; border: 1px solid #ffe3e3; text-align: left; }
     </style>
 </head>
 <body>
@@ -90,6 +109,21 @@
     </div>
 </div>
 
+<div id="ticket-use-overlay" class="overlay">
+    <div class="fullscreen-ticket-window">
+        <div class="fullscreen-ticket-title">🎟️ 特典引き換えチケット</div>
+        <div class="fullscreen-ticket-sub">✨ ご褒美獲得おめでとう！ ✨</div>
+        
+        <div class="fullscreen-ticket-notice">
+            <b>【使い方】</b><br>
+            お兄ちゃん（お姉ちゃん）にこの画面を見せて、口頭で使い道を伝えてから下のボタンを押してもらおう！
+        </div>
+        
+        <button class="btn btn-primary" style="background:#dc3545; text-align:center; padding:16px; font-size:18px;" onclick="executeUseTicket()">🔥 このチケットを使う</button>
+        <button class="btn btn-outline" style="text-align:center; margin-top:12px; border-color:#868e96; color:#495057;" onclick="closeTicketUseWindow()">閉じる</button>
+    </div>
+</div>
+
 <div class="box">
     
     <div id="home-screen" class="screen active">
@@ -97,7 +131,7 @@
 
         <div class="status-bar">
             <div id="today-date-text">----年--月--日(-)</div>
-            <div class="streak-fire">🔥 連続学習: <span id="login-streak-text">0</span>日</div>
+            <div class="streak-fire">🔥 連続: <span id="login-streak-text">0</span>日</div>
         </div>
 
         <div class="mission-box">
@@ -108,20 +142,32 @@
             <div class="mission-detail" id="mission-text">ルーレットを回してね</div>
         </div>
 
+        <button class="btn btn-ticket" onclick="startTicketMode()">🎟️ 特典チケットを見る (<span id="home-ticket-count">0</span>枚)</button>
+
         <div class="medal-box">
             <div class="medal-title" id="medal-message">🥇 満点獲得メダル (0 / 10)</div>
             <div class="medal-slots" id="medal-slots-container"></div>
-            <button class="medal-reset-btn" id="medal-clear-btn" onclick="resetMedalOnly()">🎖️ 満点メダルをリセット</button>
         </div>
 
-        <div class="medal-box" style="background:#f3f0ff; border-color:#9775fa;">
+        <div class="medal-box" style="background:#f3f0ff; border-color:#9775fa; margin-bottom: 20px;">
             <div class="medal-title" id="mission-medal-message" style="color:#6f42c1;">🏅 ミッション達成メダル (0 / 10)</div>
             <div class="medal-slots" id="mission-medal-slots-container"></div>
-            <button class="medal-reset-btn" id="mission-medal-clear-btn" style="background:#6f42c1;" onclick="resetMissionMedalOnly()">🎖️ ミッションメダルをリセット</button>
         </div>
 
         <button class="btn btn-primary" onclick="startQuizMode()">🔥 20問クイズに挑戦</button>
         <button class="btn btn-outline" onclick="startListMode()">📖 語句一覧を見る (<span id="total-words-count">0</span>語)</button>
+    </div>
+
+    <div id="ticket-screen" class="screen">
+        <div class="title" style="font-size:20px; margin-bottom:15px;">所持チケット一覧 🎟️</div>
+        <p style="font-size:12px; color:#666; text-align:left; margin-bottom:15px; line-height:1.4;">
+            メダルが10個たまるとここにチケットが追加されます。使いたいチケットをタップしてね！
+        </p>
+        
+        <div id="ticket-list-container" style="max-height: 360px; overflow-y: auto; margin-bottom:15px;">
+            </div>
+        
+        <button class="btn btn-outline" style="margin-top:10px; margin-bottom: 0;" onclick="goHome()">🏠 ホームに戻る</button>
     </div>
 
     <div id="quiz-screen" class="screen">
@@ -1160,16 +1206,18 @@ const rawExcelData = `
     let currentIndex = 0;
     let correctAnswers = 0;
     
-    // データ保持用の変数群
+    // ローカルストレージ連動データ
     let solvedWords = JSON.parse(localStorage.getItem('solvedWords')) || [];
     let medalCount = parseInt(localStorage.getItem('medalCount')) || 0;
     let missionMedalCount = parseInt(localStorage.getItem('missionMedalCount')) || 0;
     
-    // 日付・連続ログイン管理用
+    // 🎟️ 【追加】所持しているチケットの配列データ（発行日時を識別子にする）
+    let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+    let selectedTicketId = null; // 現在全画面表示しているチケットのID
+    
     let lastLoginDate = localStorage.getItem('lastLoginDate') || ""; 
     let loginStreak = parseInt(localStorage.getItem('loginStreak')) || 0;
     
-    // ミッション管理用
     let missionDate = localStorage.getItem('missionDate') || ""; 
     let missionRequired = parseInt(localStorage.getItem('missionRequired')) || 0; 
     let missionCurrent = parseInt(localStorage.getItem('missionCurrent')) || 0; 
@@ -1192,52 +1240,38 @@ const rawExcelData = `
         setupDateAndStreak();
         updateMedalDisplay();
         updateMissionMedalDisplay();
+        updateTicketCountUI();
         checkAndShowRoulette();
         updateMissionUI();
         generateWordsList();
     }
 
-    // 📅 ① 日付の取得と連続ログイン日数の計算システム
     function setupDateAndStreak() {
         const now = new Date();
-        const year = now.getFullYear();
-        const month = now.getMonth() + 1;
-        const date = now.getDate();
+        const todayStr = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
         const dayNames = ["日", "月", "火", "水", "木", "金", "土"];
-        const dayName = dayNames[now.getDay()];
-        
-        const todayStr = `${year}-${month}-${date}`;
-        document.getElementById('today-date-text').innerText = `${month}月${date}日(${dayName}曜日)`;
+        document.getElementById('today-date-text').innerText = `${now.getMonth() + 1}月${now.getDate()}日(${dayNames[now.getDay()]}曜日)`;
 
         if (lastLoginDate !== todayStr) {
             if (lastLoginDate === "") {
-                loginStreak = 1; // 初めて遊ぶとき
+                loginStreak = 1;
             } else {
                 const lastDate = new Date(lastLoginDate);
                 const todayDate = new Date(todayStr);
-                const diffTime = Math.abs(todayDate - lastDate);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                
-                if (diffDays === 1) {
-                    loginStreak++; // 前日遊んでたら継続
-                } else if (diffDays > 1) {
-                    loginStreak = 1; // 1日以上空いたらリセット
-                }
+                const diffDays = Math.ceil(Math.abs(todayDate - lastDate) / (1000 * 60 * 60 * 24));
+                if (diffDays === 1) loginStreak++;
+                else if (diffDays > 1) loginStreak = 1;
             }
             localStorage.setItem('loginStreak', loginStreak);
             localStorage.setItem('lastLoginDate', todayStr);
         }
         document.getElementById('login-streak-text').innerText = loginStreak;
-        return todayStr;
     }
 
-    // 🎡 ② 今日の最初のログインならルーレットを起動
     function checkAndShowRoulette() {
         const now = new Date();
         const todayStr = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
-        
         if (missionDate !== todayStr) {
-            // 新しい日付なのでミッションデータを初期化してルーレットを表示
             missionDate = todayStr;
             missionRequired = 0;
             missionCurrent = 0;
@@ -1246,33 +1280,26 @@ const rawExcelData = `
             localStorage.setItem('missionRequired', 0);
             localStorage.setItem('missionCurrent', 0);
             localStorage.setItem('missionCompleteClaimed', false);
-
             document.getElementById('roulette-overlay').style.display = "flex";
         }
     }
 
-    // 🎡 ② ルーレットを回転させるアニメーション演出
     function spinRoulette() {
         document.getElementById('roulette-start-btn').disabled = true;
         let count = 0;
-        let speed = 50;
         let numDisplay = document.getElementById('roulette-num');
-        
         let timer = setInterval(() => {
-            let randNum = Math.floor(Math.random() * 10) + 1; // 1〜10回
-            numDisplay.innerText = randNum;
+            numDisplay.innerText = Math.floor(Math.random() * 10) + 1;
             count++;
             if(count > 15) {
                 clearInterval(timer);
-                // 最終決定
                 missionRequired = Math.floor(Math.random() * 10) + 1;
                 numDisplay.innerText = missionRequired;
                 localStorage.setItem('missionRequired', missionRequired);
-                
                 document.getElementById('roulette-start-btn').style.display = "none";
                 document.getElementById('roulette-close-btn').style.display = "block";
             }
-        }, speed);
+        }, 50);
     }
 
     function closeRoulette() {
@@ -1280,11 +1307,9 @@ const rawExcelData = `
         updateMissionUI();
     }
 
-    // 📋 ② ミッション情報の画面表示を更新する
     function updateMissionUI() {
         const textEl = document.getElementById('mission-text');
         const badgeEl = document.getElementById('mission-badge');
-        
         if (missionRequired === 0) {
             textEl.innerText = "ルーレットを回してミッションを決めてね";
             badgeEl.innerText = "未抽選";
@@ -1297,21 +1322,43 @@ const rawExcelData = `
             badgeEl.innerText = "✨ クリア！";
             badgeEl.className = "mission-status-complete";
             
-            // 🏅 特製メダル獲得処理（まだ受け取っていない場合のみ）
             if (!missionCompleteClaimed) {
                 missionCompleteClaimed = true;
                 localStorage.setItem('missionCompleteClaimed', true);
-                if (missionMedalCount < 10) {
-                    missionMedalCount++;
-                    localStorage.setItem('missionMedalCount', missionMedalCount);
-                    updateMissionMedalDisplay();
+                
+                missionMedalCount++;
+                // 🎟️ 【変更】10個に到達したらリセットしてチケット付与
+                if (missionMedalCount >= 10) {
+                    addTicket();
+                    missionMedalCount = 0;
+                    alert("🎉 ミッション達成メダルが10個たまりました！「特典引き換えチケット」を1枚獲得しました！");
                 }
+                localStorage.setItem('missionMedalCount', missionMedalCount);
+                updateMissionMedalDisplay();
             }
         } else {
             textEl.innerText = `20問クイズをクリアしよう！ (現在: ${missionCurrent} / ${missionRequired} 回)`;
             badgeEl.innerText = "進行中";
             badgeEl.className = "mission-status-badge";
         }
+    }
+
+    // 🎟️ 【追加】特典チケットを新規作成して保存する処理
+    function addTicket() {
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+        const newTicket = {
+            id: now.getTime(), // ユニークなIDとしてタイムスタンプを使用
+            date: dateStr
+        };
+        tickets.push(newTicket);
+        localStorage.setItem('tickets', JSON.stringify(tickets));
+        updateTicketCountUI();
+    }
+
+    // 🎟️ 【追加】ホーム画面のチケット枚数表示を更新
+    function updateTicketCountUI() {
+        document.getElementById('home-ticket-count').innerText = tickets.length;
     }
 
     function switchScreen(screenId) {
@@ -1343,9 +1390,7 @@ const rawExcelData = `
         let dummys = [];
         while(dummys.length < 3) {
             let rand = allQuizList[Math.floor(Math.random() * allQuizList.length)].meaning;
-            if(rand !== currentQuiz.meaning && !dummys.includes(rand)) {
-                dummys.push(rand);
-            }
+            if(rand !== currentQuiz.meaning && !dummys.includes(rand)) dummys.push(rand);
         }
 
         let choices = [
@@ -1363,7 +1408,6 @@ const rawExcelData = `
             btn.onclick = () => {
                 const allBtns = optionsBox.querySelectorAll('.btn');
                 allBtns.forEach(b => b.disabled = true);
-                
                 if(choice.isCorrect) {
                     document.getElementById('result').innerText = "⭕ 正解！";
                     btn.style.background = "#d4edda";
@@ -1395,32 +1439,29 @@ const rawExcelData = `
         } else {
             switchScreen('score-screen');
             document.getElementById('correct-count').innerText = correctAnswers;
-            let rate = Math.round((correctAnswers / 20) * 100);
-            document.getElementById('accuracy-rate').innerText = rate;
+            document.getElementById('accuracy-rate').innerText = Math.round((correctAnswers / 20) * 100);
             
-            // 📋 クイズクリア回数をカウントアップ
             missionCurrent++;
             localStorage.setItem('missionCurrent', missionCurrent);
             
-            // ミッション完了条件のテキスト通知
             const progMsg = document.getElementById('mission-progress-message');
             if (missionRequired > 0) {
-                if (missionCurrent >= missionRequired) {
-                    progMsg.innerText = `🎯 今日のデイリーミッションを達成したぞ！🏅獲得！`;
-                } else {
-                    progMsg.innerText = `📋 ミッション進行中: あと ${missionRequired - missionCurrent} 回クリアで目標達成！`;
-                }
-            } else {
-                progMsg.innerText = "";
+                if (missionCurrent >= missionRequired) progMsg.innerText = `🎯 今日のデイリーミッションを達成したぞ！🏅獲得！`;
+                else progMsg.innerText = `📋 ミッション進行中: あと ${missionRequired - missionCurrent} 回クリアで目標達成！`;
             }
 
             if (correctAnswers === 20) {
                 document.getElementById('score-header').innerText = "神業！満点達成！ 👑";
                 document.getElementById('perfect-message').style.display = "block";
-                if (medalCount < 10) {
-                    medalCount++;
-                    localStorage.setItem('medalCount', medalCount);
+                
+                medalCount++;
+                // 🎟️ 【変更】10個に到達したらリセットしてチケット付与
+                if (medalCount >= 10) {
+                    addTicket();
+                    medalCount = 0;
+                    alert("🎉 満点獲得メダルが10個たまりました！「特典引き換えチケット」を1枚獲得しました！");
                 }
+                localStorage.setItem('medalCount', medalCount);
             } else {
                 document.getElementById('score-header').innerText = "結果発表 🎉";
                 document.getElementById('perfect-message').style.display = "none";
@@ -1432,7 +1473,6 @@ const rawExcelData = `
         }
     }
 
-    // 🥇 満点メダルの描画
     function updateMedalDisplay() {
         const container = document.getElementById('medal-slots-container');
         if (!container) return;
@@ -1443,18 +1483,9 @@ const rawExcelData = `
             if (i < medalCount) slot.innerText = "🥇";
             container.appendChild(slot);
         }
-        const msgEl = document.getElementById('medal-message');
-        const resetBtn = document.getElementById('medal-clear-btn');
-        if (medalCount >= 10) {
-            if (msgEl) msgEl.innerHTML = "🎉 <b>満点カード達成！おめでとう！</b> 🎉";
-            if (resetBtn) resetBtn.style.display = "block";
-        } else {
-            if (msgEl) msgEl.innerText = `🥇 満点獲得メダル (${medalCount} / 10)`;
-            if (resetBtn) resetBtn.style.display = "none";
-        }
+        document.getElementById('medal-message').innerText = `🥇 満点獲得メダル (${medalCount} / 10)`;
     }
 
-    // 🏅 📋 ② ミッション達成メダルの描画
     function updateMissionMedalDisplay() {
         const container = document.getElementById('mission-medal-slots-container');
         if (!container) return;
@@ -1466,37 +1497,67 @@ const rawExcelData = `
             if (i < missionMedalCount) slot.innerText = "🏅";
             container.appendChild(slot);
         }
-        const msgEl = document.getElementById('mission-medal-message');
-        const resetBtn = document.getElementById('mission-medal-clear-btn');
-        if (missionMedalCount >= 10) {
-            if (msgEl) msgEl.innerHTML = "🎉 <b>ミッションカード達成！おめでとう！</b> 🎉";
-            if (resetBtn) resetBtn.style.display = "block";
-        } else {
-            if (msgEl) msgEl.innerText = `🏅 ミッション達成メダル (${missionMedalCount} / 10)`;
-            if (resetBtn) resetBtn.style.display = "none";
-        }
+        document.getElementById('mission-medal-message').innerText = `🏅 ミッション達成メダル (${missionMedalCount} / 10)`;
     }
 
-    function resetMedalOnly() {
-        if (confirm("満点メダルをリセットして、新しいスタンプカードにしますか？")) {
-            medalCount = 0;
-            localStorage.setItem('medalCount', 0);
-            updateMedalDisplay();
-        }
+    // 🎟️ 【追加】チケット一覧画面へ切り替え＆リスト生成
+    function startTicketMode() {
+        switchScreen('ticket-screen');
+        generateTicketList();
     }
 
-    function resetMissionMedalOnly() {
-        if (confirm("ミッションメダルをリセットして、新しいスタンプカードにしますか？")) {
-            missionMedalCount = 0;
-            localStorage.setItem('missionMedalCount', 0);
-            updateMissionMedalDisplay();
+    // 🎟️ 【追加】チケット画面のリスト表示を生成する
+    function generateTicketList() {
+        const container = document.getElementById('ticket-list-container');
+        container.innerHTML = "";
+        
+        if (tickets.length === 0) {
+            container.innerHTML = "<div style='color:#868e96; margin-top:30px;'>まだチケットを持っていません。スタンプを10個ためてゲットしよう！</div>";
+            return;
+        }
+        
+        tickets.forEach((ticket, index) => {
+            const div = document.createElement('div');
+            div.className = 'ticket-item';
+            div.onclick = () => openTicketUseWindow(ticket.id); // タップで全画面表示へ
+            div.innerHTML = `
+                <div class="ticket-info">
+                    <div class="ticket-name">🎟️ 特典引き換えチケット [No.${index + 1}]</div>
+                    <div class="ticket-date">獲得日: ${ticket.date}</div>
+                </div>
+                <div class="ticket-arrow">▶</div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    // 🎟️ 【追加】チケットを全画面でポップアップ表示する
+    function openTicketUseWindow(ticketId) {
+        selectedTicketId = ticketId;
+        document.getElementById('ticket-use-overlay').style.display = "flex";
+    }
+
+    function closeTicketUseWindow() {
+        document.getElementById('ticket-use-overlay').style.display = "none";
+        selectedTicketId = null;
+    }
+
+    // 🎟️ 【追加】全画面の「使う」ボタンを押したときの消費処理
+    function executeUseTicket() {
+        if (confirm("お兄ちゃん（お姉ちゃん）立ち会いのもと、このチケットを本当に使いますか？\n（使うと一覧から消去されます）")) {
+            // 指定されたIDのチケットを配列から削除
+            tickets = tickets.filter(t => t.id !== selectedTicketId);
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+            
+            closeTicketUseWindow();
+            updateTicketCountUI();
+            generateTicketList(); // リストを再描画
+            alert("チケットを使用しました！おねだりを楽しんでね！");
         }
     }
 
     function quitQuiz() {
-        if (confirm("クイズを途中でやめてホームに戻りますか？")) {
-            goHome();
-        }
+        if (confirm("クイズを途中でやめてホームに戻りますか？")) goHome();
     }
 
     function startListMode() {
@@ -1509,7 +1570,6 @@ const rawExcelData = `
     function generateWordsList() {
         const listContainer = document.getElementById('words-list');
         if (!listContainer) return;
-        
         listContainer.innerHTML = "";
         let currentSolvedCount = 0;
 
@@ -1517,7 +1577,6 @@ const rawExcelData = `
             const hasSolved = solvedWords.includes(item.word);
             if (hasSolved) currentSolvedCount++;
             const checkMark = hasSolved ? "✅" : "";
-            
             const div = document.createElement('div');
             div.className = 'list-item';
             div.innerHTML = `
@@ -1532,44 +1591,33 @@ const rawExcelData = `
         });
 
         const totalCount = allQuizList.length;
-        const totalCountText = document.getElementById('total-count-text');
-        const solvedCountText = document.getElementById('solved-count-text');
-        const progressPercentText = document.getElementById('progress-percent-text');
-        const progressBarFill = document.getElementById('progress-bar-fill');
-
-        if (totalCountText) totalCountText.innerText = totalCount;
-        if (solvedCountText) solvedCountText.innerText = currentSolvedCount;
-        
+        document.getElementById('total-count-text').innerText = totalCount;
+        document.getElementById('solved-count-text').innerText = currentSolvedCount;
         let percent = totalCount > 0 ? Math.round((currentSolvedCount / totalCount) * 100) : 0;
-        if (progressPercentText) progressPercentText.innerText = percent;
-        if (progressBarFill) progressBarFill.style.width = `${percent}%`;
+        document.getElementById('progress-percent-text').innerText = percent;
+        document.getElementById('progress-bar-fill').style.width = `${percent}%`;
     }
 
     function filterList() {
         const query = document.getElementById('search-input').value.toLowerCase();
         const items = document.querySelectorAll('.list-item');
-        
         items.forEach(item => {
             const word = item.querySelector('.list-word-main').innerText.toLowerCase();
             const yomi = item.querySelector('.list-word-yomi').innerText.toLowerCase();
             const meaning = item.querySelector('.list-meaning').innerText.toLowerCase();
-            
-            if (word.includes(query) || yomi.includes(query) || meaning.includes(query)) {
-                item.style.display = 'flex';
-            } else {
-                item.style.display = 'none';
-            }
+            if (word.includes(query) || yomi.includes(query) || meaning.includes(query)) item.style.display = 'flex';
+            else item.style.display = 'none';
         });
     }
 
-    // 📅 📋 完全連動リセット：すべて初期化する
+    // 🎟️ 完全連動リセット：チケットも含めてすべて初期化
     function resetCheckedHistory() {
-        if (confirm("これまでの正解記録、連続ログイン日数、全てのメダルを完全消去して最初の状態にリセットしますか？")) {
-            localStorage.clear(); // ストレージを全削除
-            
+        if (confirm("これまでの正解記録、連続ログイン日数、全てのメダル、および【所持している特典チケット】もすべて消去して完全リセットしますか？")) {
+            localStorage.clear();
             solvedWords = [];
             medalCount = 0;
             missionMedalCount = 0;
+            tickets = []; // チケットも空っぽにする
             loginStreak = 0;
             lastLoginDate = "";
             missionDate = "";
@@ -1580,6 +1628,7 @@ const rawExcelData = `
             setupDateAndStreak();
             updateMedalDisplay();
             updateMissionMedalDisplay();
+            updateTicketCountUI();
             updateMissionUI();
             generateWordsList();
             alert("すべてのアプリデータを完全リセットしました！");
