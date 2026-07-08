@@ -75,7 +75,7 @@
         .roulette-window { background: white; padding: 25px; border-radius: 16px; width: 90%; max-width: 360px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         .roulette-display { font-size: 48px; font-weight: bold; color: #6f42c1; background: #f3f0ff; border: 4px dashed #9775fa; border-radius: 12px; padding: 20px; margin: 20px 0; min-height: 70px; display: flex; justify-content: center; align-items: center; }
 
-        /* 🎟️ 【追加】特典チケット関連のスタイル */
+        /* 🎟️ 特典チケット関連のスタイル */
         .btn-ticket { background: #ff6b6b; color: white; border: none; text-align: center; font-weight: bold; animation: pulse 2s infinite; }
         .btn-ticket:hover { background: #fa5252; }
         @keyframes pulse {
@@ -99,6 +99,7 @@
 </head>
 <body>
 
+<!-- 🎡 ルーレット画面 -->
 <div id="roulette-overlay" class="overlay">
     <div class="roulette-window">
         <h3 style="margin:0; color:#6f42c1;">🎲 デイリーミッション抽選</h3>
@@ -109,14 +110,16 @@
     </div>
 </div>
 
+<!-- 🎟️ チケット使用の全画面ポップアップ -->
 <div id="ticket-use-overlay" class="overlay">
     <div class="fullscreen-ticket-window">
         <div class="fullscreen-ticket-title">🎟️ 特典引き換えチケット</div>
         <div class="fullscreen-ticket-sub">✨ ご褒美獲得おめでとう！ ✨</div>
         
+        <!-- 📝 お母さん仕様に変更 -->
         <div class="fullscreen-ticket-notice">
             <b>【使い方】</b><br>
-            お兄ちゃん（お姉ちゃん）にこの画面を見せて、口頭で使い道を伝えてから下のボタンを押してもらおう！
+            お母さんにこの画面を見せて、口頭で使い道を伝えてから下のボタンを押してもらおう！
         </div>
         
         <button class="btn btn-primary" style="background:#dc3545; text-align:center; padding:16px; font-size:18px;" onclick="executeUseTicket()">🔥 このチケットを使う</button>
@@ -126,14 +129,17 @@
 
 <div class="box">
     
+    <!-- 🏠 ホーム画面 -->
     <div id="home-screen" class="screen active">
         <div class="title">単語マスター 📚</div>
 
+        <!-- 📅 日付と連続学習日数 -->
         <div class="status-bar">
             <div id="today-date-text">----年--月--日(-)</div>
             <div class="streak-fire">🔥 連続: <span id="login-streak-text">0</span>日</div>
         </div>
 
+        <!-- 📋 デイリーミッション -->
         <div class="mission-box">
             <div class="mission-title">
                 <span>🎯 今日のデイリーミッション</span>
@@ -142,13 +148,16 @@
             <div class="mission-detail" id="mission-text">ルーレットを回してね</div>
         </div>
 
+        <!-- 特典チケット画面への移動ボタン -->
         <button class="btn btn-ticket" onclick="startTicketMode()">🎟️ 特典チケットを見る (<span id="home-ticket-count">0</span>枚)</button>
 
+        <!-- 🥇 満点メダルスタンプカード -->
         <div class="medal-box">
             <div class="medal-title" id="medal-message">🥇 満点獲得メダル (0 / 10)</div>
             <div class="medal-slots" id="medal-slots-container"></div>
         </div>
 
+        <!-- 🏅 ミッション達成メダルスタンプカード -->
         <div class="medal-box" style="background:#f3f0ff; border-color:#9775fa; margin-bottom: 20px;">
             <div class="medal-title" id="mission-medal-message" style="color:#6f42c1;">🏅 ミッション達成メダル (0 / 10)</div>
             <div class="medal-slots" id="mission-medal-slots-container"></div>
@@ -158,6 +167,7 @@
         <button class="btn btn-outline" onclick="startListMode()">📖 語句一覧を見る (<span id="total-words-count">0</span>語)</button>
     </div>
 
+    <!-- 🎟️ チケット一覧画面 -->
     <div id="ticket-screen" class="screen">
         <div class="title" style="font-size:20px; margin-bottom:15px;">所持チケット一覧 🎟️</div>
         <p style="font-size:12px; color:#666; text-align:left; margin-bottom:15px; line-height:1.4;">
@@ -165,11 +175,13 @@
         </p>
         
         <div id="ticket-list-container" style="max-height: 360px; overflow-y: auto; margin-bottom:15px;">
-            </div>
+            <!-- ここに持っているチケットが並ぶ -->
+        </div>
         
         <button class="btn btn-outline" style="margin-top:10px; margin-bottom: 0;" onclick="goHome()">🏠 ホームに戻る</button>
     </div>
 
+    <!-- 📝 クイズ画面 -->
     <div id="quiz-screen" class="screen">
         <div class="hud">
             <div>
@@ -184,6 +196,7 @@
         <button id="next-btn" class="btn btn-primary" onclick="nextQuestion()">次の問題へ</button>
     </div>
 
+    <!-- 🎉 結果画面 -->
     <div id="score-screen" class="screen">
         <div class="score-box">
             <div class="score-title" id="score-header">結果発表 🎉</div>
@@ -196,6 +209,7 @@
         <button class="btn btn-outline" onclick="goHome()">🏠 ホームに戻る</button>
     </div>
 
+    <!-- 📖 語句一覧画面 -->
     <div id="list-screen" class="screen">
         <div class="title" style="font-size:20px; margin-bottom:15px;">語句一覧 📖</div>
         
@@ -1211,9 +1225,9 @@ const rawExcelData = `
     let medalCount = parseInt(localStorage.getItem('medalCount')) || 0;
     let missionMedalCount = parseInt(localStorage.getItem('missionMedalCount')) || 0;
     
-    // 🎟️ 【追加】所持しているチケットの配列データ（発行日時を識別子にする）
+    // 所持しているチケットの配列データ
     let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
-    let selectedTicketId = null; // 現在全画面表示しているチケットのID
+    let selectedTicketId = null; 
     
     let lastLoginDate = localStorage.getItem('lastLoginDate') || ""; 
     let loginStreak = parseInt(localStorage.getItem('loginStreak')) || 0;
@@ -1327,7 +1341,6 @@ const rawExcelData = `
                 localStorage.setItem('missionCompleteClaimed', true);
                 
                 missionMedalCount++;
-                // 🎟️ 【変更】10個に到達したらリセットしてチケット付与
                 if (missionMedalCount >= 10) {
                     addTicket();
                     missionMedalCount = 0;
@@ -1343,12 +1356,11 @@ const rawExcelData = `
         }
     }
 
-    // 🎟️ 【追加】特典チケットを新規作成して保存する処理
     function addTicket() {
         const now = new Date();
         const dateStr = `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
         const newTicket = {
-            id: now.getTime(), // ユニークなIDとしてタイムスタンプを使用
+            id: now.getTime(), 
             date: dateStr
         };
         tickets.push(newTicket);
@@ -1356,7 +1368,6 @@ const rawExcelData = `
         updateTicketCountUI();
     }
 
-    // 🎟️ 【追加】ホーム画面のチケット枚数表示を更新
     function updateTicketCountUI() {
         document.getElementById('home-ticket-count').innerText = tickets.length;
     }
@@ -1455,7 +1466,6 @@ const rawExcelData = `
                 document.getElementById('perfect-message').style.display = "block";
                 
                 medalCount++;
-                // 🎟️ 【変更】10個に到達したらリセットしてチケット付与
                 if (medalCount >= 10) {
                     addTicket();
                     medalCount = 0;
@@ -1500,13 +1510,11 @@ const rawExcelData = `
         document.getElementById('mission-medal-message').innerText = `🏅 ミッション達成メダル (${missionMedalCount} / 10)`;
     }
 
-    // 🎟️ 【追加】チケット一覧画面へ切り替え＆リスト生成
     function startTicketMode() {
         switchScreen('ticket-screen');
         generateTicketList();
     }
 
-    // 🎟️ 【追加】チケット画面のリスト表示を生成する
     function generateTicketList() {
         const container = document.getElementById('ticket-list-container');
         container.innerHTML = "";
@@ -1519,7 +1527,7 @@ const rawExcelData = `
         tickets.forEach((ticket, index) => {
             const div = document.createElement('div');
             div.className = 'ticket-item';
-            div.onclick = () => openTicketUseWindow(ticket.id); // タップで全画面表示へ
+            div.onclick = () => openTicketUseWindow(ticket.id); 
             div.innerHTML = `
                 <div class="ticket-info">
                     <div class="ticket-name">🎟️ 特典引き換えチケット [No.${index + 1}]</div>
@@ -1531,7 +1539,6 @@ const rawExcelData = `
         });
     }
 
-    // 🎟️ 【追加】チケットを全画面でポップアップ表示する
     function openTicketUseWindow(ticketId) {
         selectedTicketId = ticketId;
         document.getElementById('ticket-use-overlay').style.display = "flex";
@@ -1542,17 +1549,18 @@ const rawExcelData = `
         selectedTicketId = null;
     }
 
-    // 🎟️ 【追加】全画面の「使う」ボタンを押したときの消費処理
+    /* 🛠️ ポップアップ文言とお母さん仕様の変更処理 */
     function executeUseTicket() {
-        if (confirm("お兄ちゃん（お姉ちゃん）立ち会いのもと、このチケットを本当に使いますか？\n（使うと一覧から消去されます）")) {
-            // 指定されたIDのチケットを配列から削除
+        // 確認ポップアップをお母さん仕様に変更
+        if (confirm("お母さん立ち会いのもと、このチケットを本当に使いますか？\n（使うと一覧から消去されます）")) {
             tickets = tickets.filter(t => t.id !== selectedTicketId);
             localStorage.setItem('tickets', JSON.stringify(tickets));
             
             closeTicketUseWindow();
             updateTicketCountUI();
-            generateTicketList(); // リストを再描画
-            alert("チケットを使用しました！おねだりを楽しんでね！");
+            generateTicketList(); 
+            // 「おねだりを楽しんでね！」を削除
+            alert("チケットを使用しました！");
         }
     }
 
@@ -1610,14 +1618,13 @@ const rawExcelData = `
         });
     }
 
-    // 🎟️ 完全連動リセット：チケットも含めてすべて初期化
     function resetCheckedHistory() {
         if (confirm("これまでの正解記録、連続ログイン日数、全てのメダル、および【所持している特典チケット】もすべて消去して完全リセットしますか？")) {
             localStorage.clear();
             solvedWords = [];
             medalCount = 0;
             missionMedalCount = 0;
-            tickets = []; // チケットも空っぽにする
+            tickets = []; 
             loginStreak = 0;
             lastLoginDate = "";
             missionDate = "";
