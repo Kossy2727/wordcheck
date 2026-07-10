@@ -5,77 +5,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>単語マスターアプリ</title>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-        .box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; box-sizing: border-box; position: relative; }
+        /* --- テーマごとのカラー・雰囲気設定 --- */
+        :root {
+            --bg-color: #f0f2f5;
+            --box-bg: white;
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --text-color: #333;
+            --accent-border: #ccc;
+            --animal-pop: ""; /* 動物の装飾用 */
+        }
+
+        /* 🐶 犬柄（黒のアメリカンコッカー：黒×ゴールド・ベージュの上品な雰囲気） */
+        [data-theme="dog"] {
+            --bg-color: #efebe9;
+            --box-bg: #faf8f6;
+            --primary-color: #4e342e; /* チョコ・黒系 */
+            --primary-hover: #3e2723;
+            --text-color: #3e2723;
+            --accent-border: #d7ccc8;
+        }
+
+        /* 🐱 猫柄（マンチカン：オレンジ・キャメル系の明るく可愛い雰囲気） */
+        [data-theme="cat"] {
+            --bg-color: #fff3e0;
+            --box-bg: #fffdfa;
+            --primary-color: #e65100; /* 濃いオレンジ */
+            --primary-hover: #b33600;
+            --text-color: #4e342e;
+            --accent-border: #ffe0b2;
+        }
+
+        body { font-family: sans-serif; background: var(--bg-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; transition: all 0.3s ease; }
+        .box { background: var(--box-bg); padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; box-sizing: border-box; position: relative; transition: all 0.3s ease; }
         
-        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; background: #fff; cursor: pointer; text-align: left; font-size: 16px; box-sizing: border-box; transition: background 0.2s; }
+        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: 1px solid var(--accent-border); border-radius: 8px; background: #fff; cursor: pointer; text-align: left; font-size: 16px; box-sizing: border-box; transition: background 0.2s; color: var(--text-color); }
         .btn:hover { background: #f0f0f0; }
-        .btn-primary { background: #007bff; color: white; border: none; text-align: center; font-weight: bold; }
-        .btn-primary:hover { background: #0056b3; }
-        .btn-outline { background: #fff; color: #333; border: 2px solid #007bff; text-align: center; font-weight: bold; }
+        .btn-primary { background: var(--primary-color); color: white; border: none; text-align: center; font-weight: bold; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-outline { background: #fff; color: var(--primary-color); border: 2px solid var(--primary-color); text-align: center; font-weight: bold; }
         .btn-outline:hover { background: #ebf5ff; }
 
         .screen { display: none; }
         .screen.active { display: block; }
 
-        .title { font-size: 26px; font-weight: bold; margin-bottom: 20px; color: #333; }
+        .title { font-size: 26px; font-weight: bold; margin-bottom: 20px; color: var(--text-color); }
         
         .hud { display: flex; justify-content: space-between; align-items: center; color: #666; font-size: 14px; margin-bottom: 15px; }
         .quit-btn { background: #e0e0e0; color: #555; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
         .quit-btn:hover { background: #d0d0d0; }
 
-        .word { font-size: 24px; font-weight: bold; margin-bottom: 25px; color: #007bff; line-height: 1.8; }
+        .word { font-size: 24px; font-weight: bold; margin-bottom: 25px; color: var(--primary-color); line-height: 1.8; }
         rt { font-size: 13px; color: #666; font-weight: normal; }
 
         #result { font-size: 20px; font-weight: bold; margin: 15px 0; height: 25px; }
         #next-btn { display: none; margin: 0 auto; }
 
         .score-box { background: #e7f5ff; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #b3d7ff; }
-        .score-title { font-size: 22px; font-weight: bold; color: #007bff; margin-bottom: 10px; }
+        [data-theme="dog"] .score-box { background: #efebe9; border-color: #d7ccc8; }
+        [data-theme="cat"] .score-box { background: #fff3e0; border-color: #ffe0b2; }
+        .score-title { font-size: 22px; font-weight: bold; color: var(--primary-color); margin-bottom: 10px; }
 
-        .list-container { max-height: 380px; overflow-y: auto; text-align: left; border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: #fafafa; margin-top: 12px; }
-        .list-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
+        .list-container { max-height: 380px; overflow-y: auto; text-align: left; border: 1px solid var(--accent-border); border-radius: 6px; padding: 10px; background: #fafafa; margin-top: 12px; }
+        .list-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 15px; color: var(--text-color); }
         .list-item:last-child { border-bottom: none; }
         
-        .list-word { color: #007bff; width: 45%; word-break: break-all; line-height: 1.4; }
+        .list-word { color: var(--primary-color); width: 45%; word-break: break-all; line-height: 1.4; }
         .list-word-main { font-weight: bold; font-size: 15px; }
         .list-word-yomi { display: block; font-size: 11px; color: #777; font-weight: normal; margin-top: 2px; }
 
-        .list-meaning { color: #555; width: 43%; word-break: break-all; padding-left: 5px; font-size: 14px; }
+        .list-meaning { color: var(--text-color); width: 43%; word-break: break-all; padding-left: 5px; font-size: 14px; }
         .list-check { width: 12%; text-align: center; font-size: 16px; }
         
-        .search-bar { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
+        .search-bar { width: 100%; padding: 10px; border: 1px solid var(--accent-border); border-radius: 6px; font-size: 15px; box-sizing: border-box; }
         .clear-btn { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; margin-top: 10px; }
 
-        .progress-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 12px; margin-bottom: 12px; text-align: left; }
+        .progress-box { background: #f8f9fa; border: 1px solid var(--accent-border); border-radius: 8px; padding: 12px; margin-bottom: 12px; text-align: left; }
         .progress-text-container { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; font-size: 14px; color: #495057; }
         .progress-percent { font-size: 20px; font-weight: bold; color: #28a745; }
+        [data-theme="dog"] .progress-percent { color: #5d4037; }
+        [data-theme="cat"] .progress-percent { color: #e65100; }
         .progress-bar-bg { background: #e9ecef; height: 8px; border-radius: 4px; overflow: hidden; }
         .progress-bar-fill { background: #28a745; height: 100%; width: 0%; transition: width 0.5s ease; }
+        [data-theme="dog"] .progress-bar-fill { background: #5d4037; }
+        [data-theme="cat"] .progress-bar-fill { background: #e65100; }
 
-        /* 🥇 スタンプカードのスタイル */
         .medal-box { background: #fff9db; border: 2px dashed #fcc419; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        [data-theme="dog"] .medal-box { background: #fdfbf7; border-color: #bcaaa4; }
+        [data-theme="cat"] .medal-box { background: #fff8e1; border-color: #ffcc80; }
         .medal-title { font-size: 13px; font-weight: bold; color: #e67e22; margin-bottom: 6px; text-align: left; }
+        [data-theme="dog"] .medal-title { color: #5d4037; }
+        [data-theme="cat"] .medal-title { color: #e65100; }
         .medal-slots { display: flex; justify-content: flex-start; flex-wrap: wrap; gap: 6px; margin-bottom: 5px; min-height: 34px; }
         .medal-slot { width: 30px; height: 30px; background: #fff; border: 1px solid #ffe3e3; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 16px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
 
-        /* 📅 カレンダー・ログイン日数のスタイル */
         .status-bar { background: #e8f7ff; border: 1px solid #bde0fe; border-radius: 8px; padding: 10px; margin-bottom: 15px; font-size: 13px; color: #0056b3; font-weight: bold; text-align: left; display: flex; justify-content: space-between; }
+        [data-theme="dog"] .status-bar { background: #efebe9; border-color: #d7ccc8; color: #4e342e; }
+        [data-theme="cat"] .status-bar { background: #fff3e0; border-color: #ffe0b2; color: #e65100; }
         .streak-fire { color: #ff6b6b; font-size: 15px; }
 
-        /* 📋 デイリーミッション枠のスタイル */
         .mission-box { background: #f3f0ff; border: 2px solid #d0bfff; border-radius: 10px; padding: 12px; margin-bottom: 15px; text-align: left; }
+        [data-theme="dog"] .mission-box { background: #f5f5f5; border-color: #bcaaa4; }
+        [data-theme="cat"] .mission-box { background: #fff9c4; border-color: #ffe082; }
         .mission-title { font-size: 14px; font-weight: bold; color: #6f42c1; margin-bottom: 4px; display: flex; justify-content: space-between; }
+        [data-theme="dog"] .mission-title { color: #5d4037; }
+        [data-theme="cat"] .mission-title { color: #e65100; }
         .mission-detail { font-size: 15px; font-weight: bold; color: #333; }
         .mission-status-badge { background: #6f42c1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+        [data-theme="dog"] .mission-status-badge { background: #8d6e63; }
+        [data-theme="cat"] .mission-status-badge { background: #f57c00; }
         .mission-status-complete { background: #28a745; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
 
-        /* 🎡 ルーレットポップアップのスタイル */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .roulette-window { background: white; padding: 25px; border-radius: 16px; width: 90%; max-width: 360px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         .roulette-display { font-size: 48px; font-weight: bold; color: #6f42c1; background: #f3f0ff; border: 4px dashed #9775fa; border-radius: 12px; padding: 20px; margin: 20px 0; min-height: 70px; display: flex; justify-content: center; align-items: center; }
 
-        /* 🎟️ 特典チケット関連のスタイル */
         .btn-ticket { background: #ff6b6b; color: white; border: none; text-align: center; font-weight: bold; animation: pulse 2s infinite; }
         .btn-ticket:hover { background: #fa5252; }
         @keyframes pulse {
@@ -90,11 +134,17 @@
         .ticket-date { font-size: 11px; color: #868e96; margin-top: 4px; }
         .ticket-arrow { color: #ff6b6b; font-size: 18px; font-weight: bold; }
         
-        /* 全画面チケット表示用のスタイル */
         .fullscreen-ticket-window { background: #fff5f5; border: 4px dashed #ffc9c9; padding: 40px 20px; border-radius: 20px; width: 85%; max-width: 340px; text-align: center; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
         .fullscreen-ticket-title { font-size: 24px; font-weight: bold; color: #c92a2a; margin-bottom: 10px; letter-spacing: 1px; }
         .fullscreen-ticket-sub { font-size: 13px; color: #fa5252; margin-bottom: 30px; font-weight: bold; }
         .fullscreen-ticket-notice { font-size: 12px; color: #868e96; background: white; border-radius: 8px; padding: 15px; line-height: 1.6; margin-bottom: 35px; border: 1px solid #ffe3e3; text-align: left; }
+
+        /* 🎨 きせかえ専用スタイル */
+        .theme-banner { font-size: 40px; margin: 10px 0; }
+        .theme-lock-status { font-size: 13px; font-weight: bold; color: #666; margin-top: 4px; }
+        .animal-deco { font-size: 24px; display: none; margin-bottom: 10px; }
+        [data-theme="dog"] .animal-deco-dog { display: inline-block; }
+        [data-theme="cat"] .animal-deco-cat { display: inline-block; }
     </style>
 </head>
 <body>
@@ -115,31 +165,29 @@
     <div class="fullscreen-ticket-window">
         <div class="fullscreen-ticket-title">🎟️ 特典引き換えチケット</div>
         <div class="fullscreen-ticket-sub">✨ ご褒美獲得おめでとう！ ✨</div>
-        
-        <!-- 📝 お母さん仕様に変更 -->
         <div class="fullscreen-ticket-notice">
             <b>【使い方】</b><br>
             お母さんにこの画面を見せて、口頭で使い道を伝えてから下のボタンを押してもらおう！
         </div>
-        
         <button class="btn btn-primary" style="background:#dc3545; text-align:center; padding:16px; font-size:18px;" onclick="executeUseTicket()">🔥 このチケットを使う</button>
         <button class="btn btn-outline" style="text-align:center; margin-top:12px; border-color:#868e96; color:#495057;" onclick="closeTicketUseWindow()">閉じる</button>
     </div>
 </div>
 
 <div class="box">
+    <!-- 🐾 各ページに常駐する動物デコレーションエリア -->
+    <div class="animal-deco animal-deco-dog">🐕‍🦺 <b>黒コッカーちゃんが応援中！</b> 🐕‍🦺</div>
+    <div class="animal-deco animal-deco-cat">🐈 <b>短足マンチカンちゃんが応援中！</b> 🐈</div>
     
     <!-- 🏠 ホーム画面 -->
     <div id="home-screen" class="screen active">
         <div class="title">単語マスター 📚</div>
 
-        <!-- 📅 日付と連続学習日数 -->
         <div class="status-bar">
             <div id="today-date-text">----年--月--日(-)</div>
             <div class="streak-fire">🔥 連続: <span id="login-streak-text">0</span>日</div>
         </div>
 
-        <!-- 📋 デイリーミッション -->
         <div class="mission-box">
             <div class="mission-title">
                 <span>🎯 今日のデイリーミッション</span>
@@ -148,36 +196,59 @@
             <div class="mission-detail" id="mission-text">ルーレットを回してね</div>
         </div>
 
-        <!-- 特典チケット画面への移動ボタン -->
         <button class="btn btn-ticket" onclick="startTicketMode()">🎟️ 特典チケットを見る (<span id="home-ticket-count">0</span>枚)</button>
 
-        <!-- 🥇 満点メダルスタンプカード -->
         <div class="medal-box">
             <div class="medal-title" id="medal-message">🥇 満点獲得メダル (0 / 10)</div>
             <div class="medal-slots" id="medal-slots-container"></div>
         </div>
 
-        <!-- 🏅 ミッション達成メダルスタンプカード -->
-        <div class="medal-box" style="background:#f3f0ff; border-color:#9775fa; margin-bottom: 20px;">
+        <div class="medal-box" style="background:#f3f0ff; border-color:#9775fa; margin-bottom: 15px;">
             <div class="medal-title" id="mission-medal-message" style="color:#6f42c1;">🏅 ミッション達成メダル (0 / 10)</div>
             <div class="medal-slots" id="mission-medal-slots-container"></div>
         </div>
 
         <button class="btn btn-primary" onclick="startQuizMode()">🔥 20問クイズに挑戦</button>
         <button class="btn btn-outline" onclick="startListMode()">📖 語句一覧を見る (<span id="total-words-count">0</span>語)</button>
+        <!-- 🎨 きせかえページへの移動ボタン -->
+        <button class="btn btn-outline" style="border-color:#28a745; color:#28a745;" onclick="startThemeMode()">🎨 きせかえを選ぶ</button>
+    </div>
+
+    <!-- 🎨 きせかえ選択画面 -->
+    <div id="theme-screen" class="screen">
+        <div class="title" style="font-size:20px; margin-bottom:15px;">テーマきせかえ 🎨</div>
+        <p style="font-size:12px; color:#666; text-align:left; margin-bottom:15px; line-height:1.4;">
+            チケットを1枚使って可愛い動物テーマをロック解除できるよ！いつでもデフォルトに戻せます。
+        </p>
+
+        <!-- デフォルト -->
+        <button class="btn" style="text-align:center; border-width:2px;" onclick="selectTheme('default')">
+            <div class="theme-banner">📚</div>
+            <b>デフォルト（いつもの）</b>
+            <div class="theme-lock-status" style="color:#28a745;">いつでも使えるよ</div>
+        </button>
+
+        <!-- 犬柄（アメリカンコッカー） -->
+        <button class="btn" style="text-align:center; border-width:2px;" onclick="selectTheme('dog')">
+            <div class="theme-banner">🐕‍🦺</div>
+            <b>犬柄（アメリカン・コッカー）</b>
+            <div class="theme-lock-status" id="lock-status-dog">確認中...</div>
+        </button>
+
+        <!-- 猫柄（マンチカン） -->
+        <button class="btn" style="text-align:center; border-width:2px;" onclick="selectTheme('cat')">
+            <div class="theme-banner">🐈</div>
+            <b>猫柄（短足マンチカン）</b>
+            <div class="theme-lock-status" id="lock-status-cat">確認中...</div>
+        </button>
+
+        <button class="btn btn-outline" style="margin-top:15px; margin-bottom: 0;" onclick="goHome()">🏠 ホームに戻る</button>
     </div>
 
     <!-- 🎟️ チケット一覧画面 -->
     <div id="ticket-screen" class="screen">
         <div class="title" style="font-size:20px; margin-bottom:15px;">所持チケット一覧 🎟️</div>
-        <p style="font-size:12px; color:#666; text-align:left; margin-bottom:15px; line-height:1.4;">
-            メダルが10個たまるとここにチケットが追加されます。使いたいチケットをタップしてね！
-        </p>
-        
-        <div id="ticket-list-container" style="max-height: 360px; overflow-y: auto; margin-bottom:15px;">
-            <!-- ここに持っているチケットが並ぶ -->
-        </div>
-        
+        <div id="ticket-list-container" style="max-height: 360px; overflow-y: auto; margin-bottom:15px;"></div>
         <button class="btn btn-outline" style="margin-top:10px; margin-bottom: 0;" onclick="goHome()">🏠 ホームに戻る</button>
     </div>
 
@@ -232,7 +303,6 @@
 </div>
 
 <script>
-// ★★★【ここにExcelのデータを丸ごと貼り付けます】★★★
 const rawExcelData = `
 愛嬌	あいきょう	にこにこして可愛らしいこと。相手を喜ばせるための言葉や行い。
 愛護	あいご	可愛がって、大切にすること。良さを守って、保護すること。
@@ -1213,19 +1283,15 @@ const rawExcelData = `
 渡りに船	わたりにふね	何かしようとするときに、ちょうど都合の良いことに巡り合うこと。
 渡る世間に鬼はない	わたるせけんにおにはない	世の中には無情な人ばかりではなく、情け深い人はどこにでもいるものだ
 `;
-// ★★★【貼り付けここまで】★★★
 
     let allQuizList = [];
     let currentSet = [];
     let currentIndex = 0;
     let correctAnswers = 0;
     
-    // ローカルストレージ連動データ
     let solvedWords = JSON.parse(localStorage.getItem('solvedWords')) || [];
     let medalCount = parseInt(localStorage.getItem('medalCount')) || 0;
     let missionMedalCount = parseInt(localStorage.getItem('missionMedalCount')) || 0;
-    
-    // 所持しているチケットの配列データ
     let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
     let selectedTicketId = null; 
     
@@ -1236,6 +1302,10 @@ const rawExcelData = `
     let missionRequired = parseInt(localStorage.getItem('missionRequired')) || 0; 
     let missionCurrent = parseInt(localStorage.getItem('missionCurrent')) || 0; 
     let missionCompleteClaimed = JSON.parse(localStorage.getItem('missionCompleteClaimed')) || false;
+
+    // 🎨 きせかえ用データ
+    let currentTheme = localStorage.getItem('currentTheme') || 'default';
+    let unlockedThemes = JSON.parse(localStorage.getItem('unlockedThemes')) || ['default'];
 
     function parseData() {
         const lines = rawExcelData.trim().split('\n');
@@ -1251,6 +1321,7 @@ const rawExcelData = `
         });
         document.getElementById('total-words-count').innerText = allQuizList.length;
         
+        applyTheme(currentTheme); // 保存されているテーマを適用
         setupDateAndStreak();
         updateMedalDisplay();
         updateMissionMedalDisplay();
@@ -1258,6 +1329,65 @@ const rawExcelData = `
         checkAndShowRoulette();
         updateMissionUI();
         generateWordsList();
+    }
+
+    // 🎨 テーマ切り替え＆適用処理
+    function applyTheme(themeName) {
+        document.body.setAttribute('data-theme', themeName);
+        currentTheme = themeName;
+        localStorage.setItem('currentTheme', themeName);
+    }
+
+    function startThemeMode() {
+        switchScreen('theme-screen');
+        updateThemeScreenUI();
+    }
+
+    function updateThemeScreenUI() {
+        const dogStatus = document.getElementById('lock-status-dog');
+        const catStatus = document.getElementById('lock-status-cat');
+
+        if (unlockedThemes.includes('dog')) {
+            dogStatus.innerText = currentTheme === 'dog' ? "っぽん中 🐾" : "アンロック済み（タップで選択）";
+            dogStatus.style.color = "#28a745";
+        } else {
+            dogStatus.innerText = "🔒 ロック中（チケット1枚で解除）";
+            dogStatus.style.color = "#dc3545";
+        }
+
+        if (unlockedThemes.includes('cat')) {
+            catStatus.innerText = currentTheme === 'cat' ? "っぽん中 🐾" : "アンロック済み（タップで選択）";
+            catStatus.style.color = "#28a745";
+        } else {
+            catStatus.innerText = "🔒 ロック中（チケット1枚で解除）";
+            catStatus.style.color = "#dc3545";
+        }
+    }
+
+    function selectTheme(themeName) {
+        if (unlockedThemes.includes(themeName)) {
+            applyTheme(themeName);
+            updateThemeScreenUI();
+            alert(`${themeName === 'default' ? 'デフォルト' : themeName === 'dog' ? '犬柄（アメリカン・コッカー）' : '猫柄（短足マンチカン）'} にきせかえました！`);
+        } else {
+            // ロック解除処理
+            if (tickets.length > 0) {
+                const jpName = themeName === 'dog' ? '犬柄（アメリカン・コッカー）' : '猫柄（短足マンチカン）';
+                if (confirm(`チケットを1枚使って「${jpName}」をアンロックしますか？`)) {
+                    tickets.pop(); // チケットを1枚消費
+                    unlockedThemes.push(themeName);
+                    localStorage.setItem('tickets', JSON.stringify(tickets));
+                    localStorage.setItem('unlockedThemes', JSON.stringify(unlockedThemes));
+                    
+                    applyTheme(themeName);
+                    updateTicketCountUI();
+                    updateThemeScreenUI();
+                    alert(`🎉 「${jpName}」が使えるようになりました！`);
+                }
+            } else {
+                alert("チケットが足りません！満点を取るかミッションをクリアしてチケットを手に入れてね。");
+            }
+        }
     }
 
     function setupDateAndStreak() {
@@ -1421,14 +1551,14 @@ const rawExcelData = `
                 allBtns.forEach(b => b.disabled = true);
                 if(choice.isCorrect) {
                     document.getElementById('result').innerText = "⭕ 正解！";
-                    btn.style.background = "#d4edda";
+                    btn.style.background = currentTheme === 'dog' ? "#d7ccc8" : currentTheme === 'cat' ? "#ffe0b2" : "#d4edda";
                     correctAnswers++;
                     document.getElementById('current-score').innerText = correctAnswers;
                     saveProgress(currentQuiz.word);
                 } else {
                     document.getElementById('result').innerText = "❌ 不正解...";
                     btn.style.background = "#f8d7da";
-                    allBtns.forEach(b => { if(b.innerText === currentQuiz.meaning) b.style.background = "#d4edda"; });
+                    allBtns.forEach(b => { if(b.innerText === currentQuiz.meaning) b.style.background = currentTheme === 'dog' ? "#d7ccc8" : currentTheme === 'cat' ? "#ffe0b2" : "#d4edda"; });
                 }
                 document.getElementById('next-btn').style.display = "block";
             };
@@ -1549,9 +1679,7 @@ const rawExcelData = `
         selectedTicketId = null;
     }
 
-    /* 🛠️ ポップアップ文言とお母さん仕様の変更処理 */
     function executeUseTicket() {
-        // 確認ポップアップをお母さん仕様に変更
         if (confirm("お母さん立ち会いのもと、このチケットを本当に使いますか？\n（使うと一覧から消去されます）")) {
             tickets = tickets.filter(t => t.id !== selectedTicketId);
             localStorage.setItem('tickets', JSON.stringify(tickets));
@@ -1559,7 +1687,6 @@ const rawExcelData = `
             closeTicketUseWindow();
             updateTicketCountUI();
             generateTicketList(); 
-            // 「おねだりを楽しんでね！」を削除
             alert("チケットを使用しました！");
         }
     }
@@ -1631,7 +1758,10 @@ const rawExcelData = `
             missionRequired = 0;
             missionCurrent = 0;
             missionCompleteClaimed = false;
+            currentTheme = 'default';
+            unlockedThemes = ['default'];
             
+            applyTheme('default');
             setupDateAndStreak();
             updateMedalDisplay();
             updateMissionMedalDisplay();
