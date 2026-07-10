@@ -5,83 +5,164 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>単語マスターアプリ</title>
     <style>
-        /* --- テーマごとのカラー・雰囲気設定 --- */
+        /* --- 🎨 きせかえテーマの本格定義 --- */
         :root {
             --bg-color: #f0f2f5;
-            --box-bg: white;
+            --bg-pattern: none;
+            --box-bg: rgba(255, 255, 255, 0.95);
             --primary-color: #007bff;
             --primary-hover: #0056b3;
             --text-color: #333;
             --accent-border: #ccc;
-            --animal-pop: ""; /* 動物の装飾用 */
+            --box-border: none;
         }
 
-        /* 🐶 犬柄（黒のアメリカンコッカー：黒×ゴールド・ベージュの上品な雰囲気） */
+        /* 🐶 犬柄（黒のアメリカンコッカー：黒×ゴールドベージュのシック＆キュートな世界観） */
         [data-theme="dog"] {
-            --bg-color: #efebe9;
-            --box-bg: #faf8f6;
-            --primary-color: #4e342e; /* チョコ・黒系 */
-            --primary-hover: #3e2723;
-            --text-color: #3e2723;
-            --accent-border: #d7ccc8;
+            --bg-color: #dfd7cf;
+            /* 背景全体に黒コッカーのシルエットと肉球のモノグラム風パターンを配置 */
+            --bg-pattern: 
+                radial-gradient(#4e342e 10%, transparent 11%),
+                radial-gradient(#4e342e 10%, transparent 11%),
+                linear-gradient(45deg, transparent 48%, #4e342e 49%, #4e342e 51%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, #4e342e 49%, #4e342e 51%, transparent 52%);
+            --bg-pattern-size: 60px 60px;
+            --bg-pattern-opacity: 0.15; /* 背景がうるさくならないように調整 */
+            --box-bg: rgba(255, 251, 24a, 0.96);
+            --primary-color: #2b1d1a; /* コッカーの黒髪をイメージした超濃茶 */
+            --primary-hover: #4e342e;
+            --text-color: #2b1d1a;
+            --accent-border: #bcaaa4;
+            --box-border: 4px solid #8d6e63;
         }
 
-        /* 🐱 猫柄（マンチカン：オレンジ・キャメル系の明るく可愛い雰囲気） */
+        /* 🐱 猫柄（マンチカン：オレンジ×キャメルのぬくもり溢れるキャットワールド） */
         [data-theme="cat"] {
-            --bg-color: #fff3e0;
-            --box-bg: #fffdfa;
-            --primary-color: #e65100; /* 濃いオレンジ */
-            --primary-hover: #b33600;
+            --bg-color: #fce8d7;
+            /* 背景全体にマンチカンの足跡をイメージしたドット＆ステップパターン */
+            --bg-pattern: 
+                radial-gradient(#e65100 15%, transparent 16%),
+                radial-gradient(#e65100 15%, transparent 16%),
+                radial-gradient(rgba(230,81,0,0.4) 10%, transparent 11%);
+            --bg-pattern-size: 40px 40px;
+            --bg-pattern-opacity: 0.12;
+            --box-bg: rgba(255, 253, 245, 0.97);
+            --primary-color: #e65100; /* マンチカンキャメル */
+            --primary-hover: #bf360c;
             --text-color: #4e342e;
-            --accent-border: #ffe0b2;
+            --accent-border: #ffcc80;
+            --box-border: 4px dashed #ffb74d;
         }
 
-        body { font-family: sans-serif; background: var(--bg-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; transition: all 0.3s ease; }
-        .box { background: var(--box-bg); padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; box-sizing: border-box; position: relative; transition: all 0.3s ease; }
-        
-        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: 1px solid var(--accent-border); border-radius: 8px; background: #fff; cursor: pointer; text-align: left; font-size: 16px; box-sizing: border-box; transition: background 0.2s; color: var(--text-color); }
-        .btn:hover { background: #f0f0f0; }
-        .btn-primary { background: var(--primary-color); color: white; border: none; text-align: center; font-weight: bold; }
-        .btn-primary:hover { background: var(--primary-hover); }
-        .btn-outline { background: #fff; color: var(--primary-color); border: 2px solid var(--primary-color); text-align: center; font-weight: bold; }
-        .btn-outline:hover { background: #ebf5ff; }
+        /* 全体ベースレイアウト */
+        body { 
+            font-family: sans-serif; 
+            background-color: var(--bg-color); 
+            position: relative;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px; 
+            box-sizing: border-box; 
+            transition: all 0.5s ease; 
+        }
 
-        .screen { display: none; }
+        /* 背景パターン用の重ね合わせ（テーマ切り替えを滑らかにみせるため） */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: var(--bg-pattern);
+            background-size: var(--bg-pattern-size);
+            opacity: var(--bg-pattern-opacity);
+            z-index: -1;
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+        body[data-theme="dog"]::before {
+            background-position: 0 0, 30px 30px, 0 0, 30px 30px;
+        }
+        body[data-theme="cat"]::before {
+            background-position: 0 0, 20px 20px, 10px 10px;
+        }
+
+        /* メインコンテナ（アプリの台紙） */
+        .box { 
+            background: var(--box-bg); 
+            padding: 30px; 
+            border-radius: 20px; 
+            border: var(--box-border);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15); 
+            width: 100%; 
+            max-width: 450px; 
+            text-align: center; 
+            box-sizing: border-box; 
+            position: relative; 
+            transition: all 0.3s ease; 
+            overflow: hidden;
+        }
+        
+        /* 🐾 デザインとしての動物イラスト埋め込み（各画面の右下などにひょっこり現れる） */
+        .decor-animal {
+            display: none;
+            position: absolute;
+            bottom: -10px;
+            right: -5px;
+            font-size: 70px;
+            opacity: 0.15;
+            pointer-events: none;
+            user-select: none;
+        }
+        [data-theme="dog"] .decor-dog { display: block; }
+        [data-theme="cat"] .decor-cat { display: block; }
+
+        /* ボタンデザイン */
+        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: 1px solid var(--accent-border); border-radius: 12px; background: #fff; cursor: pointer; text-align: left; font-size: 16px; box-sizing: border-box; transition: background 0.2s; color: var(--text-color); font-weight: 500; }
+        .btn:hover { background: #f8f9fa; }
+        .btn-primary { background: var(--primary-color); color: white; border: none; text-align: center; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-outline { background: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); text-align: center; font-weight: bold; }
+        .btn-outline:hover { background: rgba(0,0,0,0.03); }
+
+        .screen { display: none; position: relative; z-index: 2; }
         .screen.active { display: block; }
 
-        .title { font-size: 26px; font-weight: bold; margin-bottom: 20px; color: var(--text-color); }
+        .title { font-size: 26px; font-weight: bold; margin-bottom: 20px; color: var(--text-color); letter-spacing: 1px; }
         
         .hud { display: flex; justify-content: space-between; align-items: center; color: #666; font-size: 14px; margin-bottom: 15px; }
         .quit-btn { background: #e0e0e0; color: #555; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
         .quit-btn:hover { background: #d0d0d0; }
 
-        .word { font-size: 24px; font-weight: bold; margin-bottom: 25px; color: var(--primary-color); line-height: 1.8; }
-        rt { font-size: 13px; color: #666; font-weight: normal; }
+        .word { font-size: 26px; font-weight: bold; margin-bottom: 25px; color: var(--primary-color); line-height: 1.8; background: rgba(0,0,0,0.02); padding: 15px; border-radius: 12px; border: 1px dashed var(--accent-border); }
+        rt { font-size: 14px; color: #555; font-weight: normal; }
 
-        #result { font-size: 20px; font-weight: bold; margin: 15px 0; height: 25px; }
+        #result { font-size: 22px; font-weight: bold; margin: 15px 0; height: 30px; }
         #next-btn { display: none; margin: 0 auto; }
 
-        .score-box { background: #e7f5ff; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #b3d7ff; }
+        .score-box { background: #e7f5ff; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #b3d7ff; }
         [data-theme="dog"] .score-box { background: #efebe9; border-color: #d7ccc8; }
         [data-theme="cat"] .score-box { background: #fff3e0; border-color: #ffe0b2; }
         .score-title { font-size: 22px; font-weight: bold; color: var(--primary-color); margin-bottom: 10px; }
 
-        .list-container { max-height: 380px; overflow-y: auto; text-align: left; border: 1px solid var(--accent-border); border-radius: 6px; padding: 10px; background: #fafafa; margin-top: 12px; }
-        .list-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 15px; color: var(--text-color); }
+        .list-container { max-height: 350px; overflow-y: auto; text-align: left; border: 1px solid var(--accent-border); border-radius: 8px; padding: 10px; background: rgba(255,255,255,0.7); margin-top: 12px; }
+        .list-item { padding: 12px; border-bottom: 1px solid var(--accent-border); display: flex; justify-content: space-between; align-items: center; font-size: 15px; color: var(--text-color); }
         .list-item:last-child { border-bottom: none; }
         
         .list-word { color: var(--primary-color); width: 45%; word-break: break-all; line-height: 1.4; }
         .list-word-main { font-weight: bold; font-size: 15px; }
-        .list-word-yomi { display: block; font-size: 11px; color: #777; font-weight: normal; margin-top: 2px; }
+        .list-word-yomi { display: block; font-size: 11px; color: #666; font-weight: normal; margin-top: 2px; }
 
         .list-meaning { color: var(--text-color); width: 43%; word-break: break-all; padding-left: 5px; font-size: 14px; }
         .list-check { width: 12%; text-align: center; font-size: 16px; }
         
-        .search-bar { width: 100%; padding: 10px; border: 1px solid var(--accent-border); border-radius: 6px; font-size: 15px; box-sizing: border-box; }
-        .clear-btn { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; margin-top: 10px; }
+        .search-bar { width: 100%; padding: 12px; border: 1px solid var(--accent-border); border-radius: 8px; font-size: 15px; box-sizing: border-box; background: rgba(255,255,255,0.9); }
+        .clear-btn { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; margin-top: 15px; opacity: 0.6; }
+        .clear-btn:hover { opacity: 1; }
 
-        .progress-box { background: #f8f9fa; border: 1px solid var(--accent-border); border-radius: 8px; padding: 12px; margin-bottom: 12px; text-align: left; }
-        .progress-text-container { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; font-size: 14px; color: #495057; }
+        .progress-box { background: rgba(0,0,0,0.02); border: 1px solid var(--accent-border); border-radius: 12px; padding: 12px; margin-bottom: 12px; text-align: left; }
+        .progress-text-container { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; font-size: 14px; color: var(--text-color); }
         .progress-percent { font-size: 20px; font-weight: bold; color: #28a745; }
         [data-theme="dog"] .progress-percent { color: #5d4037; }
         [data-theme="cat"] .progress-percent { color: #e65100; }
@@ -90,27 +171,27 @@
         [data-theme="dog"] .progress-bar-fill { background: #5d4037; }
         [data-theme="cat"] .progress-bar-fill { background: #e65100; }
 
-        .medal-box { background: #fff9db; border: 2px dashed #fcc419; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
-        [data-theme="dog"] .medal-box { background: #fdfbf7; border-color: #bcaaa4; }
-        [data-theme="cat"] .medal-box { background: #fff8e1; border-color: #ffcc80; }
-        .medal-title { font-size: 13px; font-weight: bold; color: #e67e22; margin-bottom: 6px; text-align: left; }
+        .medal-box { background: #fff9db; border: 2px dashed #fcc419; border-radius: 14px; padding: 15px; margin-bottom: 15px; }
+        [data-theme="dog"] .medal-box { background: rgba(245,245,245,0.5); border-color: #bcaaa4; }
+        [data-theme="cat"] .medal-box { background: rgba(255,248,225,0.6); border-color: #ffcc80; }
+        .medal-title { font-size: 13px; font-weight: bold; color: #e67e22; margin-bottom: 8px; text-align: left; }
         [data-theme="dog"] .medal-title { color: #5d4037; }
         [data-theme="cat"] .medal-title { color: #e65100; }
         .medal-slots { display: flex; justify-content: flex-start; flex-wrap: wrap; gap: 6px; margin-bottom: 5px; min-height: 34px; }
-        .medal-slot { width: 30px; height: 30px; background: #fff; border: 1px solid #ffe3e3; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 16px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+        .medal-slot { width: 32px; height: 32px; background: #fff; border: 1px solid #ffe3e3; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 16px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
 
-        .status-bar { background: #e8f7ff; border: 1px solid #bde0fe; border-radius: 8px; padding: 10px; margin-bottom: 15px; font-size: 13px; color: #0056b3; font-weight: bold; text-align: left; display: flex; justify-content: space-between; }
+        .status-bar { background: #e8f7ff; border: 1px solid #bde0fe; border-radius: 10px; padding: 10px; margin-bottom: 15px; font-size: 13px; color: #0056b3; font-weight: bold; text-align: left; display: flex; justify-content: space-between; }
         [data-theme="dog"] .status-bar { background: #efebe9; border-color: #d7ccc8; color: #4e342e; }
         [data-theme="cat"] .status-bar { background: #fff3e0; border-color: #ffe0b2; color: #e65100; }
         .streak-fire { color: #ff6b6b; font-size: 15px; }
 
-        .mission-box { background: #f3f0ff; border: 2px solid #d0bfff; border-radius: 10px; padding: 12px; margin-bottom: 15px; text-align: left; }
-        [data-theme="dog"] .mission-box { background: #f5f5f5; border-color: #bcaaa4; }
+        .mission-box { background: #f3f0ff; border: 2px solid #d0bfff; border-radius: 12px; padding: 12px; margin-bottom: 15px; text-align: left; }
+        [data-theme="dog"] .mission-box { background: rgba(245,245,245,0.7); border-color: #bcaaa4; }
         [data-theme="cat"] .mission-box { background: #fff9c4; border-color: #ffe082; }
         .mission-title { font-size: 14px; font-weight: bold; color: #6f42c1; margin-bottom: 4px; display: flex; justify-content: space-between; }
         [data-theme="dog"] .mission-title { color: #5d4037; }
         [data-theme="cat"] .mission-title { color: #e65100; }
-        .mission-detail { font-size: 15px; font-weight: bold; color: #333; }
+        .mission-detail { font-size: 15px; font-weight: bold; color: var(--text-color); }
         .mission-status-badge { background: #6f42c1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
         [data-theme="dog"] .mission-status-badge { background: #8d6e63; }
         [data-theme="cat"] .mission-status-badge { background: #f57c00; }
@@ -120,14 +201,14 @@
         .roulette-window { background: white; padding: 25px; border-radius: 16px; width: 90%; max-width: 360px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         .roulette-display { font-size: 48px; font-weight: bold; color: #6f42c1; background: #f3f0ff; border: 4px dashed #9775fa; border-radius: 12px; padding: 20px; margin: 20px 0; min-height: 70px; display: flex; justify-content: center; align-items: center; }
 
-        .btn-ticket { background: #ff6b6b; color: white; border: none; text-align: center; font-weight: bold; animation: pulse 2s infinite; }
+        .btn-ticket { background: #ff6b6b; color: white; border: none; text-align: center; font-weight: bold; animation: pulse 2s infinite; border-radius: 12px; }
         .btn-ticket:hover { background: #fa5252; }
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,107,107,0.7); }
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,107,107,0.5); }
             70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(255,107,107,0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,107,107,0); }
         }
-        .ticket-item { background: #fff5f5; border: 2px dashed #ffc9c9; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s; }
+        .ticket-item { background: #fff5f5; border: 2px dashed #ffc9c9; border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s; }
         .ticket-item:hover { background: #ffe3e3; }
         .ticket-info { text-align: left; }
         .ticket-name { font-size: 16px; font-weight: bold; color: #c92a2a; }
@@ -139,12 +220,14 @@
         .fullscreen-ticket-sub { font-size: 13px; color: #fa5252; margin-bottom: 30px; font-weight: bold; }
         .fullscreen-ticket-notice { font-size: 12px; color: #868e96; background: white; border-radius: 8px; padding: 15px; line-height: 1.6; margin-bottom: 35px; border: 1px solid #ffe3e3; text-align: left; }
 
-        /* 🎨 きせかえ専用スタイル */
-        .theme-banner { font-size: 40px; margin: 10px 0; }
-        .theme-lock-status { font-size: 13px; font-weight: bold; color: #666; margin-top: 4px; }
-        .animal-deco { font-size: 24px; display: none; margin-bottom: 10px; }
-        [data-theme="dog"] .animal-deco-dog { display: inline-block; }
-        [data-theme="cat"] .animal-deco-cat { display: inline-block; }
+        /* 🎨 きせかえカード配置用 */
+        .theme-card-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
+        .theme-card { background: white; border: 2px solid var(--accent-border); border-radius: 14px; padding: 15px; cursor: pointer; text-align: center; transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+        .theme-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .theme-card.active-theme { border-color: var(--primary-color); background: rgba(0,0,0,0.01); }
+        .theme-card.active-theme::after { content: "選択中 ✨"; position: absolute; top: 10px; right: 10px; font-size: 11px; font-weight: bold; background: var(--primary-color); color: white; padding: 2px 6px; border-radius: 4px; }
+        .theme-banner { font-size: 36px; margin-bottom: 5px; }
+        .theme-lock-status { font-size: 12px; font-weight: bold; color: #666; margin-top: 6px; }
     </style>
 </head>
 <body>
@@ -175,9 +258,9 @@
 </div>
 
 <div class="box">
-    <!-- 🐾 各ページに常駐する動物デコレーションエリア -->
-    <div class="animal-deco animal-deco-dog">🐕‍🦺 <b>黒コッカーちゃんが応援中！</b> 🐕‍🦺</div>
-    <div class="animal-deco animal-deco-cat">🐈 <b>短足マンチカンちゃんが応援中！</b> 🐈</div>
+    <!-- 🫥 背景グラフィック（CSSアートの動物） -->
+    <div class="decor-animal decor-dog">🐕‍🦺</div>
+    <div class="decor-animal decor-cat">🐈</div>
     
     <!-- 🏠 ホーム画面 -->
     <div id="home-screen" class="screen active">
@@ -203,14 +286,13 @@
             <div class="medal-slots" id="medal-slots-container"></div>
         </div>
 
-        <div class="medal-box" style="background:#f3f0ff; border-color:#9775fa; margin-bottom: 15px;">
+        <div class="medal-box" style="background: rgba(243,240,255,0.6); border-color:#9775fa; margin-bottom: 15px;">
             <div class="medal-title" id="mission-medal-message" style="color:#6f42c1;">🏅 ミッション達成メダル (0 / 10)</div>
             <div class="medal-slots" id="mission-medal-slots-container"></div>
         </div>
 
         <button class="btn btn-primary" onclick="startQuizMode()">🔥 20問クイズに挑戦</button>
         <button class="btn btn-outline" onclick="startListMode()">📖 語句一覧を見る (<span id="total-words-count">0</span>語)</button>
-        <!-- 🎨 きせかえページへの移動ボタン -->
         <button class="btn btn-outline" style="border-color:#28a745; color:#28a745;" onclick="startThemeMode()">🎨 きせかえを選ぶ</button>
     </div>
 
@@ -218,31 +300,33 @@
     <div id="theme-screen" class="screen">
         <div class="title" style="font-size:20px; margin-bottom:15px;">テーマきせかえ 🎨</div>
         <p style="font-size:12px; color:#666; text-align:left; margin-bottom:15px; line-height:1.4;">
-            チケットを1枚使って可愛い動物テーマをロック解除できるよ！いつでもデフォルトに戻せます。
+            チケットを1枚使って可愛い動物デザインをロック解除できるよ！いつでも元に戻せます。
         </p>
 
-        <!-- デフォルト -->
-        <button class="btn" style="text-align:center; border-width:2px;" onclick="selectTheme('default')">
-            <div class="theme-banner">📚</div>
-            <b>デフォルト（いつもの）</b>
-            <div class="theme-lock-status" style="color:#28a745;">いつでも使えるよ</div>
-        </button>
+        <div class="theme-card-grid">
+            <!-- デフォルト -->
+            <div class="theme-card" id="card-default" onclick="selectTheme('default')">
+                <div class="theme-banner">📘</div>
+                <b style="font-size:15px;">デフォルト（いつもの）</b>
+                <div class="theme-lock-status" style="color:#28a745;">いつでも使えるよ</div>
+            </div>
 
-        <!-- 犬柄（アメリカンコッカー） -->
-        <button class="btn" style="text-align:center; border-width:2px;" onclick="selectTheme('dog')">
-            <div class="theme-banner">🐕‍🦺</div>
-            <b>犬柄（アメリカン・コッカー）</b>
-            <div class="theme-lock-status" id="lock-status-dog">確認中...</div>
-        </button>
+            <!-- 犬柄 -->
+            <div class="theme-card" id="card-dog" onclick="selectTheme('dog')">
+                <div class="theme-banner">🐕‍🦺</div>
+                <b style="font-size:15px;">犬柄（アメリカン・コッカー）</b>
+                <div class="theme-lock-status" id="lock-status-dog">確認中...</div>
+            </div>
 
-        <!-- 猫柄（マンチカン） -->
-        <button class="btn" style="text-align:center; border-width:2px;" onclick="selectTheme('cat')">
-            <div class="theme-banner">🐈</div>
-            <b>猫柄（短足マンチカン）</b>
-            <div class="theme-lock-status" id="lock-status-cat">確認中...</div>
-        </button>
+            <!-- 猫柄 -->
+            <div class="theme-card" id="card-cat" onclick="selectTheme('cat')">
+                <div class="theme-banner">🐈</div>
+                <b style="font-size:15px;">猫柄（短足マンチカン）</b>
+                <div class="theme-lock-status" id="lock-status-cat">確認中...</div>
+            </div>
+        </div>
 
-        <button class="btn btn-outline" style="margin-top:15px; margin-bottom: 0;" onclick="goHome()">🏠 ホームに戻る</button>
+        <button class="btn btn-outline" style="margin-top:20px; margin-bottom: 0;" onclick="goHome()">🏠 ホームに戻る</button>
     </div>
 
     <!-- 🎟️ チケット一覧画面 -->
@@ -1321,7 +1405,7 @@ const rawExcelData = `
         });
         document.getElementById('total-words-count').innerText = allQuizList.length;
         
-        applyTheme(currentTheme); // 保存されているテーマを適用
+        applyTheme(currentTheme); 
         setupDateAndStreak();
         updateMedalDisplay();
         updateMissionMedalDisplay();
@@ -1331,7 +1415,7 @@ const rawExcelData = `
         generateWordsList();
     }
 
-    // 🎨 テーマ切り替え＆適用処理
+    // 🎨 テーマ適用処理
     function applyTheme(themeName) {
         document.body.setAttribute('data-theme', themeName);
         currentTheme = themeName;
@@ -1346,20 +1430,24 @@ const rawExcelData = `
     function updateThemeScreenUI() {
         const dogStatus = document.getElementById('lock-status-dog');
         const catStatus = document.getElementById('lock-status-cat');
+        
+        // カードの選択中クラスをリセット
+        document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active-theme'));
+        document.getElementById(`card-${currentTheme}`).classList.add('active-theme');
 
         if (unlockedThemes.includes('dog')) {
-            dogStatus.innerText = currentTheme === 'dog' ? "っぽん中 🐾" : "アンロック済み（タップで選択）";
+            dogStatus.innerText = "解除済み（タップして選択）";
             dogStatus.style.color = "#28a745";
         } else {
-            dogStatus.innerText = "🔒 ロック中（チケット1枚で解除）";
+            dogStatus.innerText = "🔒 ロック中（チケット1枚）";
             dogStatus.style.color = "#dc3545";
         }
 
         if (unlockedThemes.includes('cat')) {
-            catStatus.innerText = currentTheme === 'cat' ? "っぽん中 🐾" : "アンロック済み（タップで選択）";
+            catStatus.innerText = "解除済み（タップして選択）";
             catStatus.style.color = "#28a745";
         } else {
-            catStatus.innerText = "🔒 ロック中（チケット1枚で解除）";
+            catStatus.innerText = "🔒 ロック中（チケット1枚）";
             catStatus.style.color = "#dc3545";
         }
     }
@@ -1368,13 +1456,11 @@ const rawExcelData = `
         if (unlockedThemes.includes(themeName)) {
             applyTheme(themeName);
             updateThemeScreenUI();
-            alert(`${themeName === 'default' ? 'デフォルト' : themeName === 'dog' ? '犬柄（アメリカン・コッカー）' : '猫柄（短足マンチカン）'} にきせかえました！`);
         } else {
-            // ロック解除処理
             if (tickets.length > 0) {
                 const jpName = themeName === 'dog' ? '犬柄（アメリカン・コッカー）' : '猫柄（短足マンチカン）';
                 if (confirm(`チケットを1枚使って「${jpName}」をアンロックしますか？`)) {
-                    tickets.pop(); // チケットを1枚消費
+                    tickets.pop(); 
                     unlockedThemes.push(themeName);
                     localStorage.setItem('tickets', JSON.stringify(tickets));
                     localStorage.setItem('unlockedThemes', JSON.stringify(unlockedThemes));
@@ -1382,10 +1468,9 @@ const rawExcelData = `
                     applyTheme(themeName);
                     updateTicketCountUI();
                     updateThemeScreenUI();
-                    alert(`🎉 「${jpName}」が使えるようになりました！`);
                 }
             } else {
-                alert("チケットが足りません！満点を取るかミッションをクリアしてチケットを手に入れてね。");
+                alert("チケットが足りません！クイズやミッションでチケットをゲットしてね。");
             }
         }
     }
@@ -1746,7 +1831,7 @@ const rawExcelData = `
     }
 
     function resetCheckedHistory() {
-        if (confirm("これまでの正解記録、連続ログイン日数、全てのメダル、および【所持している特典チケット】もすべて消去して完全リセットしますか？")) {
+        if (confirm("すべてのデータをリセットしますか？")) {
             localStorage.clear();
             solvedWords = [];
             medalCount = 0;
@@ -1768,7 +1853,7 @@ const rawExcelData = `
             updateTicketCountUI();
             updateMissionUI();
             generateWordsList();
-            alert("すべてのアプリデータを完全リセットしました！");
+            alert("リセットしました！");
         }
     }
 
